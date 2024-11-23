@@ -51,6 +51,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Visual Studio code
+.vscode
+
 # Visual Studio files
 [Dd]ebug/
 [Dd]ebug.DLL/
