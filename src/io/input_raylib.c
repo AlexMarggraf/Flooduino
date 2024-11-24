@@ -6,6 +6,11 @@
 
 
 bool ButtonHasBeenPressed(Button b) {
-    // TODO implement this, using 
-    return false;
+    if(b == ENTER){
+        return IsKeyPressed(257);
+    } else if (b == DOWN){
+        return IsKeyPressed(264);
+    } else{
+        return IsKeyPressed(265);
+    }
 }
