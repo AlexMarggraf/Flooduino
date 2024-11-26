@@ -12,16 +12,15 @@
 *
 ********************************************************************************************/
 
-#include "common.h"    // NOTE: Declares global (extern) variables
+#include "common.h"    // NOTE: Declares global (extern) variable and types
 #include "io/input.h"
 #include "io/output.h"
-#include "raylib.h"
 
 //----------------------------------------------------------------------------------
-// Shared Variables Definition (global)
-// NOTE: Those variables are shared between modules through common.h
+// Shared Variable Definition (global)
+// NOTE: This variable is shared between modules through common.h
 //----------------------------------------------------------------------------------
-GameState gameState = {0};
+GameState gameState = { 0 };
 
 
 void SetTestState(void);
@@ -38,6 +37,7 @@ int main(void)
     // Main game loop
     while (!ShouldEndGame())    // Detect window close button or ESC key
     {
+        // TODO implement logic here (this code was only for testing the visuals)
         if (ButtonHasBeenPressed(UP)) {
             gameState.fieldSize++;
             UpdateLayout();
@@ -58,7 +58,10 @@ int main(void)
     return 0;
 }
 
-
+/**
+ * This function is only for testing purposes. 
+ * It sets the global variable to a 
+ */
 void SetTestState() {
     gameState = (GameState){ 
         .screen = GAME, 

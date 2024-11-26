@@ -1,6 +1,8 @@
-// this file implements the functions declared in output.h using raylib
+/** 
+ * this file implements the functions declared in output.h using raylib. 
+*/
 
-// todos:
+// todos (p-vf):
 // TODO differentiate the visuals of color and size selection screen
 // TODO implement the static screens (title, won, lost)
 
@@ -21,7 +23,7 @@ static Color colors[8] = {{ 230, 41, 55, 255 },
     { 200, 122, 255, 255 },
     { 0, 158, 47, 255 },
     { 127, 106, 79, 255 }};
-static Color screen[64][64];
+static Color ledScreen[64][64];
 
 static const int wantedMargin = 10;
 static int actualMargin = -1;
@@ -29,24 +31,24 @@ static int fieldBlockSize = -1;
 static int fieldOffset = -1;
 static const int colSelectionBlockSize = 2;
 
-// rendering of the different screen states
-void RenderTitleScreen(void);
-void RenderColorSelectionScreen(void);
-void RenderSizeSelectionScreen(void);
-void RenderGameScreen(void);
-void RenderWonScreen(void);
-void RenderLostScreen(void);
+// rendering of the different screen states to the color-array ledScreen
+void RenderTitleLedScreen(void);
+void RenderColorSelectionLedScreen(void);
+void RenderSizeSelectionLedScreen(void);
+void RenderGameLedScreen(void);
+void RenderWonLedScreen(void);
+void RenderLostLedScreen(void);
 
-// show/reset the rendered screen
-void ShowScreen(void);
-void ResetScreen(void);
+// show/reset the contents of ledScreen
+void ShowLedScreen(void);
+void ResetLedScreen(void);
 
 // debugging
 void DrawDebugInformation(void);
 
-// utility render functions
-void RenderField(bool);
-void RenderColorSelection(int);
+// utility render functions (for rendering layout onto the ledScreen)
+void RenderField(bool colorful);
+void RenderColorSelection(int selectedColor);
 void RenderSelectedColor(void);
 void RenderNumberOfMoves(void);
 
@@ -57,20 +59,20 @@ void DrawScreen(void) {
 
     ClearBackground(BLACK);
 
-    ResetScreen();
+    ResetLedScreen();
 
     switch(gameState.screen)
     {
-        case TITLE: RenderTitleScreen(); break;
-        case COLOR_SELECTION: RenderColorSelectionScreen(); break;
-        case SIZE_SELECTION: RenderSizeSelectionScreen(); break;
-        case GAME: RenderGameScreen(); break;
-        case WON: RenderWonScreen(); break;
-        case LOST: RenderLostScreen(); break;
+        case TITLE: RenderTitleLedScreen(); break;
+        case COLOR_SELECTION: RenderColorSelectionLedScreen(); break;
+        case SIZE_SELECTION: RenderSizeSelectionLedScreen(); break;
+        case GAME: RenderGameLedScreen(); break;
+        case WON: RenderWonLedScreen(); break;
+        case LOST: RenderLostLedScreen(); break;
         default: break;
     }
 
-    ShowScreen();
+    ShowLedScreen();
 
     DrawDebugInformation();
 
@@ -104,26 +106,26 @@ bool ShouldEndGame(void) {
 }
 //--------------------------------------------------------------------------------------
 
-void RenderTitleScreen(void) {
+void RenderTitleLedScreen(void) {
     for (int y = 0; y < 64; y++) {
         for (int x = 0; x < 64; x++) {
-            screen[y][x] = BLUE;
+            ledScreen[y][x] = BLUE;
         }
     }
 }
 
-void RenderColorSelectionScreen(void){
+void RenderColorSelectionLedScreen(void){
     RenderColorSelection(-1);
     RenderField(false);
 }
 
-void RenderSizeSelectionScreen(void){
+void RenderSizeSelectionLedScreen(void){
     RenderColorSelection(-1);
     RenderField(false);
 }
 
 
-void RenderGameScreen(void) {
+void RenderGameLedScreen(void) {
 
     RenderField(true);
 
@@ -132,105 +134,124 @@ void RenderGameScreen(void) {
     // draw the selected color at the top left of the field
     for (int y = 0; y < fieldOffset; y++) {
         for (int x = 0; x < fieldOffset; x++) {
-            screen[y][x] = colors[gameState.currentColor];
+            ledScreen[y][x] = colors[gameState.currentColor];
         }
     }
 
-    // draw the moves
-    int horizontalSpace = (64 - fieldOffset) / 2 * 2;
-    for (int i = 0; i < gameState.numberOfMoves; i++) {
-        screen[i/(horizontalSpace/2) * 2][i * 2 % horizontalSpace + fieldOffset + 1] = GRAY;
-    }
+    RenderNumberOfMoves();
 }
 
-void RenderWonScreen(void){
+void RenderWonLedScreen(void){
     for (int y = 0; y < 64; y++) {
         for (int x = 0; x < 64; x++) {
-            screen[y][x] = GREEN;
+            ledScreen[y][x] = GREEN;
         }
     }
 }
 
-void RenderLostScreen(void){
+void RenderLostLedScreen(void){
     for (int y = 0; y < 64; y++) {
         for (int x = 0; x < 64; x++) {
-            screen[y][x] = RED;
+            ledScreen[y][x] = RED;
         }
     }
 }
 
-void ShowScreen(void) {
+void ShowLedScreen(void) {
     int offset = 10;
     int pixelSize = 10;
     for (int y = 0; y < 64; y++) {
         for (int x = 0; x < 64; x++) {
-            DrawCircle(x * pixelSize + offset, y * pixelSize + offset, pixelSize/2, screen[y][x]);
+            DrawCircle(x * pixelSize + offset, y * pixelSize + offset, pixelSize/2, ledScreen[y][x]);
         }
     }
 }
 
-void ResetScreen(void) {
+/**
+ * 
+ */
+void ResetLedScreen(void) {
     for (int y = 0; y < 64; y++) {
         for (int x = 0; x < 64; x++) {
-            screen[y][x] = BLANK;
+            ledScreen[y][x] = BLANK;
         }
     }
 }
 
+/**
+ * Draws all the numbers of gameState (except the field array) to the screen. 
+ */
 void DrawDebugInformation(void) {
     char a[150];
     int len = sprintf(&a, "screen: %d\nnumberOfMoves: %d\ncurrentColor: %d\nfieldSize: %d\nnumberOfColors: %d", gameState.screen, gameState.numberOfMoves, gameState.currentColor, gameState.fieldSize, gameState.numberOfColors);
     DrawText(a, 20,150, 5, WHITE);
 }
 
+/**
+ * Renders the field in the bottom right corner. 
+ * @param[in] colorful Specifies if the field should be rendered colorful. 
+ *                     If true, the contents of gameState.field are rendered, otherwise a checkerboard pattern is rendered.
+ */
 void RenderField(bool colorful) {
     if (colorful) {
         // draw field
         for (int y = 0; y < gameState.fieldSize*fieldBlockSize; y++) {
             for (int x = 0; x < gameState.fieldSize*fieldBlockSize; x++) {
-                screen[y+fieldOffset][x+fieldOffset] = colors[gameState.field[y/fieldBlockSize][x/fieldBlockSize]];
+                ledScreen[y+fieldOffset][x+fieldOffset] = colors[gameState.field[y/fieldBlockSize][x/fieldBlockSize]];
             }
         }
     } else {
         for (int y = 0; y < gameState.fieldSize*fieldBlockSize; y++) {
             for (int x = 0; x < gameState.fieldSize*fieldBlockSize; x++) {
-                screen[y+fieldOffset][x+fieldOffset] = (y/fieldBlockSize+x/fieldBlockSize)%2 == 0 ? WHITE : BLANK;
+                ledScreen[y+fieldOffset][x+fieldOffset] = (y/fieldBlockSize+x/fieldBlockSize)%2 == 0 ? WHITE : BLANK;
             }
         }
     }
 }
 
-// render color selection bar, with a highlighted color (selectedColor) 
-// if selecedColor is negative, only the color selection bar is rendered
+/** 
+ * Render color selection bar, with the in selectedColor specified color (if non-negative).
+ * If selecedColor is negative, only the color selection bar is rendered, without highlight. 
+ */
 void RenderColorSelection(int selectedColor) {
     // draw color selection bar
-    // TODO this could be optimized
+    // TODO this could be optimized (only two nested for-loops)
     for (int c = 0; c < gameState.numberOfColors; c++) {
         int colBlockOffset = 64 - (colSelectionBlockSize + 1)*(c + 1);
         Color currCol = colors[c];
         for (int y = 0; y < colSelectionBlockSize; y++) {
             for (int x = 0; x < colSelectionBlockSize; x++) {
-                screen[y+colBlockOffset][x+1] = currCol;
+                ledScreen[y+colBlockOffset][x+1] = currCol;
             }
         }
     }
-
-    // draw highlight of currently selected color
+    
     if (selectedColor < 0) {
         return;
     }
+
+    // draw highlight of currently selected color
     int colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (selectedColor + 1) - 1;
     for (int y = 0; y < colSelectionBlockSize + 2; y++) {
         for (int x = 0; x < colSelectionBlockSize + 2; x++) {
             if (x == 0 || x == colSelectionBlockSize + 1 || y == 0 || y == colSelectionBlockSize + 1) {
-                screen[y+colHighlightOffset][x] = WHITE;
+                ledScreen[y+colHighlightOffset][x] = WHITE;
             }
         }
     }
 }
+
 void RenderSelectedColor(void) {
 
 }
-void RenderNumberOfMoves(void) {
 
+/**
+ * Renders the number of moves done until now, in the upper right part of the screen as grey dots
+ */
+void RenderNumberOfMoves(void) {
+    // draw the moves
+    int horizontalSpace = (64 - fieldOffset) / 2 * 2;
+    for (int i = 0; i < gameState.numberOfMoves; i++) {
+        ledScreen[i/(horizontalSpace/2) * 2][i * 2 % horizontalSpace + fieldOffset + 1] = GRAY;
+    }
 }

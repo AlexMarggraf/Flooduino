@@ -11,6 +11,9 @@ typedef enum Button {
     DOWN
 } Button;
 
+/**
+ * Checks, whether the specified button has been pressed since last checked. 
+ */
 bool ButtonHasBeenPressed(Button);
 
 #endif // INPUT_H

@@ -2,9 +2,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-//----------------------------------------------------------------------------------
-// Types and Structures Definition
-//----------------------------------------------------------------------------------
+// This header file declares global things (Types and a global variable)
 
 typedef enum GameScreen {
     TITLE,
@@ -23,25 +21,7 @@ typedef struct GameState {
     int currentColor;
 } GameState;
 
-//----------------------------------------------------------------------------------
-// Global Variables Declaration (shared by several modules)
-//----------------------------------------------------------------------------------
+// Global Variable Declaration (shared by all modules)
 extern GameState gameState;
 
-#ifdef __cplusplus
-extern "C" {            // Prevents name mangling of functions
-#endif
-
-//----------------------------------------------------------------------------------
-// Various Function Declarations
-//----------------------------------------------------------------------------------
-void DrawScreen(void);
-void InitGameState(void);
-void UpdateGameState(void);
-// TODO
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // SCREENS_H
+#endif // COMMON_H
