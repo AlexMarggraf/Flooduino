@@ -21,7 +21,6 @@ typedef enum GameScreen {
 } GameScreen;
 
 
-// TODO add member representing the maximal moves a player can make to still win
 /**
  * This datatype represents the game state. 
  * it contains the following members:
@@ -30,7 +29,8 @@ typedef enum GameScreen {
  * - fieldSize: the size of the field, 
  * - numberOfColors: the number of colors the player can choose from,
  * - numberOfMoves: the number of moves the player has done,
- * - currentColor: the color that the player has selected at the moment. 
+ * - currentColor: the color that the player has selected at the moment, 
+ * - maxNumberOfMoves: the maximal number of moves a player can make to still win.
  */
 typedef struct GameState { 
     GameScreen screen;
@@ -39,6 +39,7 @@ typedef struct GameState {
     int numberOfColors;
     int numberOfMoves;
     int currentColor;
+    int maxNumberOfMoves;
 } GameState;
 
 // This is the global variable representing the current state of the game. 

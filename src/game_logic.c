@@ -15,6 +15,7 @@
 #include "common.h"    // NOTE: Declares global (extern) variable and types
 #include "io/input.h"
 #include "io/output.h"
+// this should cause a conflict
 
 //----------------------------------------------------------------------------------
 // Shared Variable Definition (global)
