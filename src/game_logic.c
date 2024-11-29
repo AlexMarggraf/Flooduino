@@ -15,6 +15,7 @@
 #include "common.h"    // NOTE: Declares global (extern) variable and types
 #include "io/input.h"
 #include "io/output.h"
+#include <stdlib.h>
 
 //----------------------------------------------------------------------------------
 // Shared Variable Definition (global)
@@ -24,6 +25,25 @@ GameState gameState = { 0 };
 
 
 void SetTestState(void);
+void flood_fill(int x, int y, int original_color, int new_color);
+int** gameBoardFixed(void);
+void setNumberOfMoves(void); //TODO: implement this function
+bool inField(int x, int y);
+bool isWithinRange(int x);
+void increaseFieldSize(void);
+void decreaseFieldSize(void);
+bool is_won(int board[26][26]);
+int** gameBoardFixed(void);
+void freeGameboard(void);
+void selectionModeSize(void);
+void selectionModeColors(void);
+void increaseColors(void);
+void decreaseColors(void);
+
+
+int numberOfMoves;
+int fieldSizeCounter;
+int** gameBoard;
 
 //----------------------------------------------------------------------------------
 // Main entry point
@@ -34,27 +54,11 @@ int main(void)
     SetTestState();
     UpdateLayout();
 
-    // Main game loop
-    while (!ShouldEndGame())    // Detect window close button or ESC key
-    {
-        // TODO implement logic here (this code was only for testing the visuals)
-        if (ButtonHasBeenPressed(UP)) {
-            gameState.fieldSize++;
-            UpdateLayout();
-        }
-        if (ButtonHasBeenPressed(DOWN)) {
-            gameState.fieldSize--;
-            UpdateLayout();
-        }
-        if (ButtonHasBeenPressed(ENTER)) {
-            gameState.numberOfMoves++;
-            UpdateLayout();
-        }
-        DrawScreen();
-    }
+    // Main game loops
+    selectionModeSize();
+    selectionModeColors();
 
     TerminateScreen();
-
     return 0;
 }
 
@@ -79,4 +83,179 @@ void SetTestState() {
         .currentColor = 1
     };
 }
+
+
+ void flood_fill(int x, int y, int original_color, int new_color){
+    // Falsche Farbe oder bereits geflutet
+    freeGameboard();
+    gameBoard = gameBoardFixed();
+    if(!inField(x,y)){
+        return;
+    }
+    if (gameBoard[x][y] != original_color || gameBoard[x][y] == new_color) {
+        return;
+    }
+
+    // Farbe ändern
+    gameBoard[x][y] = new_color;
+
+    // Nachbarn prüfen
+    flood_fill(x + 1, y, original_color, new_color);
+    flood_fill(x - 1, y, original_color, new_color);
+    flood_fill(x, y + 1, original_color, new_color);
+    flood_fill(x, y - 1, original_color, new_color);
+}
+void setNumberOfMoves(){
+    gameState.numberOfMoves = gameState.fieldSize;
+}
+
+bool inField(int x, int y){
+    // Grenzen prüfen
+    if (x < 0 || x >= 26 || y < 0 || y >= 26) {
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
+bool isWithinRange(int x){
+    if (x < 0 || x >= 26){
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
+void increaseFieldSize(){
+     if(gameState.fieldSize == 26){ //TODO: Was ist die Minimale Grösse?
+            gameState.fieldSize = 8;
+            }
+            else{
+                gameState.fieldSize++;
+            }
+}
+
+void decreaseFieldSize(){
+    if(gameState.fieldSize == 8){ //TODO: Was ist die Minimale Grösse?
+    gameState.fieldSize = 26;
+    }
+    else{
+        gameState.fieldSize--;
+    }
+}
+
+bool is_won(int board[26][26]) { // TODO: Array dynamisch machen.
+    int color = board[0][0];
+    for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 26; j++) {
+            if (board[i][j] != color) {
+                return 0; // Noch nicht gewonnen
+            }
+        }
+    }
+    return 1; // Gewonnen
+}
+
+int** gameBoardFixed(){
+    fieldSizeCounter = gameState.fieldSize;
+
+    // Dynamisches 2D-Array erstellen
+    int** gameBoard = malloc(fieldSizeCounter * sizeof(int*)); // Zeilenzeiger allokieren
+    if (gameBoard == NULL) {
+        printf("Fehler: Speicher konnte nicht allokiert werden.\n");
+        return NULL;
+    }
+
+    for (int i = 0; i < fieldSizeCounter; i++) {
+        gameBoard[i] = malloc(fieldSizeCounter * sizeof(int)); // Spalten für jede Zeile allokieren
+        if (gameBoard[i] == NULL) {
+            printf("Fehler: Speicher konnte nicht allokiert werden.\n");
+            // Bereits allokierten Speicher freigeben
+            for (int j = 0; j < i; j++) {
+                free(gameBoard[j]);
+            }
+            free(gameBoard);
+            return NULL;
+        }
+    }
+    return gameBoard;
+}
+
+void freeGameboard(){
+    if(gameBoard != NULL){
+        for (int i = 0; i < fieldSizeCounter; i++) {
+        free(gameBoard[i]); // Spalten freigeben
+    }
+    free(gameBoard);
+    }
+    
+}
+
+void selectionModeSize(){
+        while (!ShouldEndGame()) {
+        // TODO implement logic here (this code was only for testing the visuals)
+        if (ButtonHasBeenPressed(UP)) {
+            increaseFieldSize();
+           UpdateLayout();
+        }
+        if (ButtonHasBeenPressed(DOWN)) {
+            decreaseFieldSize();
+            UpdateLayout();
+        }
+        if (ButtonHasBeenPressed(ENTER)) {
+            setNumberOfMoves();
+            UpdateLayout();
+            DrawScreen();
+            return;
+        }
+        DrawScreen();
+
+    }
+}
+
+void selectionModeColors(){
+    while (!ShouldEndGame()) {
+        // TODO implement logic here (this code was only for testing the visuals)
+        if (ButtonHasBeenPressed(UP)) {
+            increaseFieldSize();
+           UpdateLayout();
+        }
+        if (ButtonHasBeenPressed(DOWN)) {
+            decreaseFieldSize();
+            UpdateLayout();
+        }
+        if (ButtonHasBeenPressed(ENTER)) {
+            setNumberOfMoves();
+            UpdateLayout();
+            gameMode();
+            DrawScreen();
+            return;
+        }
+        DrawScreen();
+
+    }
+
+}
+
+void increaseColors(){
+     if(gameState.fieldSize == 26){ //TODO: Was ist die Minimale Grösse?
+            gameState.fieldSize = 8;
+            }
+            else{
+                gameState.fieldSize++;
+            }
+}
+
+void decreaseColors(){
+    if(gameState.numberOfColors == 3){ //TODO: Was ist die Minimale Grösse?
+    gameState.numberOfColors = 7;
+    }
+    else{
+        gameState.numberOfColors--;
+    }
+}
+
+
 
