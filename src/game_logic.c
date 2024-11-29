@@ -16,8 +16,6 @@
 #include "io/input.h"
 #include "io/output.h"
 #include <stdlib.h>
-// TODO: Projekt
-// this should cause a conflict
 
 //----------------------------------------------------------------------------------
 // Shared Variable Definition (global)
