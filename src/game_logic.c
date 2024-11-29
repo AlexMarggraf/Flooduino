@@ -60,7 +60,8 @@ int main(void)
 
 /**
  * This function is only for testing purposes. 
- * It sets the global variable to a 
+ * It sets the global gameState variable to some state. 
+ * Feel free to modify this function for testing different states of the game. 
  */
 void SetTestState() {
     gameState = (GameState){ 
