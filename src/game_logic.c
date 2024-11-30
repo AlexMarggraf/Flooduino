@@ -138,7 +138,6 @@ void floodFillIterative() {
     while (front < back && back <= (26*26)) {
         // Hole den nächsten Punkt aus der Warteschlange
         Point current = queue[front++];
-        printf("front %d \n", front);
         int x = current.x;
         int y = current.y;
 
@@ -157,7 +156,6 @@ void floodFillIterative() {
                     // Füge die Nachbarzelle zur Warteschlange hinzu
                     gameState.field[newX][newY] = gameState.currentColor;
                     queue[back++] = (Point){newX, newY};
-                    printf("back %d \n", back);
                 }
             }
         }
@@ -165,7 +163,7 @@ void floodFillIterative() {
 }
 void setNumberOfMoves(){
     
-    gameState.maxNumberOfMoves = gameState.fieldSize*0.2975*gameState.numberOfColors;
+    gameState.numberOfMoves = (int) gameState.fieldSize*0.2975*gameState.numberOfColors;
    
 }
 
