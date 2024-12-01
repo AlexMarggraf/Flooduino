@@ -15,14 +15,16 @@
 
 static int screenWidth = 650;
 static int screenHeight = 650;
-static Color colors[8] = {{ 230, 41, 55, 255 }, 
-    { 0, 228, 48, 255 },
-    { 0, 121, 241, 255 },
-    { 253, 249, 0, 255 },
-    { 255, 161, 0, 255 },
-    { 200, 122, 255, 255 },
-    { 0, 158, 47, 255 },
-    { 127, 106, 79, 255 }};
+static Color colors[8] = {
+    { 255, 0, 0, 255 },      // Pure Red
+    { 255, 255, 0, 255 },    // Pure Yellow
+    { 0, 165, 255, 255 },    // Light Blue
+    { 0, 128, 0, 255 },      // Medium Green
+    { 255, 165, 0, 255 },    // Pure Orange
+    { 0, 0, 165, 255 },      // Dark Blue
+    { 255, 224, 189, 255 },  // Skin Color
+    { 100, 0, 90, 255 }      // Purple
+};
 static Color ledScreen[64][64];
 
 static const int wantedMargin = 10;
