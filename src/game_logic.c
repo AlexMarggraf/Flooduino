@@ -16,6 +16,7 @@
 #include "io/input.h"
 #include "io/output.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 //----------------------------------------------------------------------------------
 // Shared Variable Definition (global)
@@ -61,14 +62,14 @@ int main(void)
     InitScreen("Prototype Flooduino");
     UpdateLayout();
     while (!ShouldEndGame()) {
-    titleScreen();
-    gameState.numberOfColors = 3;
-    selectionModeSize();
-    gameState.currentColor = 2;
-    selectionModeColors();
-    chosenNumberOfColor = gameState.numberOfColors;
-    SetGamefield();
-    gameMode();
+        titleScreen();
+        gameState.numberOfColors = 3;
+        selectionModeSize();
+        gameState.currentColor = 2;
+        selectionModeColors();
+        chosenNumberOfColor = gameState.numberOfColors;
+        SetGamefield();
+        gameMode();
     }
 
     TerminateScreen();
@@ -82,15 +83,15 @@ int main(void)
  */
 void SetGamefield() {
     srand(time(NULL));
-    for (int i = 0; i < 26; i++){
-        for (int j = 0; j < 26; j++){
+    for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 26; j++) {
             gameState.field[i][j] = rand() % gameState.numberOfColors;
         }
     }
 }
 
 void SetInitialState() {
-    gameState = (GameState){ 
+    gameState = (GameState) { 
         .screen = GAME, 
         .fieldSize = 10,
         .numberOfColors = 8,
@@ -98,16 +99,12 @@ void SetInitialState() {
         .currentColor = 1
     };
     srand(time(NULL));
-    for (int i = 0; i < 26; i++){
-        for (int j = 0; j < 26; j++){
+    for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 26; j++) {
             gameState.field[i][j] = rand() % 8;
         }
     }
 }
-
-
- #include <stdbool.h>
-#include <stdlib.h>
 
 // Struktur für Koordinaten
 typedef struct {
@@ -124,7 +121,7 @@ void floodFillIterative() {
     int front = 0, back = 0;
 
     // Füge den Startpunkt (oben links) zur Warteschlange hinzu
-    queue[back++] = (Point){0, 0};
+    queue[back++] = (Point) {0, 0};
 
     // Richtungen für Nachbarzellen (oben, rechts, unten, links)
     int directions[4][2] = {
@@ -155,74 +152,65 @@ void floodFillIterative() {
                 if (gameState.field[newX][newY] == originalColor) {
                     // Füge die Nachbarzelle zur Warteschlange hinzu
                     gameState.field[newX][newY] = gameState.currentColor;
-                    queue[back++] = (Point){newX, newY};
+                    queue[back++] = (Point) {newX, newY};
                 }
             }
         }
     }
 }
-void setNumberOfMoves(){
-    
+
+void setNumberOfMoves() {
     gameState.numberOfMoves = (int) gameState.fieldSize*0.2975*gameState.numberOfColors;
-   
 }
 
-bool inField(int x, int y){
+bool inField(int x, int y) {
     // Grenzen prüfen
     if (x < 0 || x >= 26 || y < 0 || y >= 26) {
         return false;
-    }
-    else{
+    } else {
         return true;
     }
 }
 
-bool isWithinRange(int x){
-    if (x < 0 || x >= 26){
+bool isWithinRange(int x) {
+    if (x < 0 || x >= 26) {
         return false;
-    }
-    else{
+    } else {
         return true;
     }
 }
 
-void increaseFieldSize(){
-     if(gameState.fieldSize == 26){ //TODO: Was ist die Minimale Grösse?
-            gameState.fieldSize = 8;
-            }
-            else{
-                gameState.fieldSize++;
-            }
+void increaseFieldSize() {
+    if (gameState.fieldSize == 26) { //TODO: Was ist die Minimale Grösse?
+        gameState.fieldSize = 8;
+    } else {
+        gameState.fieldSize++;
+    }
 }
 
-void decreaseFieldSize(){
-    if(gameState.fieldSize == 8){ //TODO: Was ist die Minimale Grösse?
-    gameState.fieldSize = 26;
-    }
-    else{
+void decreaseFieldSize() {
+    if (gameState.fieldSize == 8) { //TODO: Was ist die Minimale Grösse?
+        gameState.fieldSize = 26;
+    } else {
         gameState.fieldSize--;
     }
 }
 
-void increaseNumberOfColors(){
-     if(gameState.numberOfColors == 8){ //TODO: Was ist die Minimale Grösse?
+void increaseNumberOfColors() {
+    if (gameState.numberOfColors == 8) { //TODO: Was ist die Minimale Grösse?
         gameState.numberOfColors = 3;
-    }
-    else{
+    } else {
         gameState.numberOfColors++;
     }
 }
 
-void decreaseNumberOfColors(){
-    if(gameState.numberOfColors == 3){ //TODO: Was ist die Minimale Grösse?
+void decreaseNumberOfColors() {
+    if (gameState.numberOfColors == 3) { //TODO: Was ist die Minimale Grösse?
         gameState.numberOfColors = 8;
-    }
-    else{
+    } else {
         gameState.numberOfColors--;
     }
 }
-
-
 
 bool is_won() { // TODO: Array dynamisch machen.
     int color = gameState.field[0][0];
@@ -236,12 +224,11 @@ bool is_won() { // TODO: Array dynamisch machen.
     return true; // Gewonnen
 }
 
-
-void selectionModeSize(){
+void selectionModeSize() {
     gameState.screen = SIZE_SELECTION;
     UpdateLayout();
     DrawScreen();
-        while (!ShouldEndGame()) {
+    while (!ShouldEndGame()) {
         // TODO implement logic here (this code was only for testing the visuals)
         if (ButtonHasBeenPressed(UP)) {
             increaseFieldSize();
@@ -258,11 +245,10 @@ void selectionModeSize(){
             return;
         }
         DrawScreen();
-
     }
 }
 
-void selectionModeColors(){
+void selectionModeColors() {
     gameState.screen = COLOR_SELECTION;
     UpdateLayout();
     DrawScreen();
@@ -283,15 +269,14 @@ void selectionModeColors(){
             return;
         }
         DrawScreen();
-
     }
-
 }
-void titleScreen(){
+
+void titleScreen() {
     gameState.screen = TITLE;
     UpdateLayout();
     DrawScreen();
-    while(!ShouldEndGame()){
+    while(!ShouldEndGame()) {
         if (ButtonHasBeenPressed(ENTER)) {
             return;
         }
@@ -299,12 +284,12 @@ void titleScreen(){
     }
 }
 
-void gameMode(){
+void gameMode() {
     gameState.currentColor = 0;
     gameState.screen = GAME;
     UpdateLayout();
     DrawScreen();
-    while(!ShouldEndGame()){
+    while(!ShouldEndGame()) {
         if (ButtonHasBeenPressed(UP)) {
             selectColorInGameUP();
         }
@@ -313,72 +298,63 @@ void gameMode(){
             selectColorInGameDOWN();
         }
 
-
         if (ButtonHasBeenPressed(ENTER)) { // TODO
             int originalColor = gameState.field[0][0]; // Die ursprüngliche Farbe oben links
             if (originalColor != gameState.currentColor) {
+                floodFillIterative();
+                if (is_won()) {
+                    wonScreen();
+                    return;
+                }
                 
-            
-            floodFillIterative();
-            if(is_won()){
-            wonScreen();
-            return;
+                gameState.numberOfMoves--;
+                if (gameState.numberOfMoves == 0) {
+                    lostScreen();
+                    return;
+                }
             }
-            
-            gameState.numberOfMoves--;
-            if(gameState.numberOfMoves == 0){
-                lostScreen();
-                return;
-            }
-            }
-        
-            
         }
         DrawScreen();
-
     }
 }
 
-void selectColorInGameUP(){
-    if(chosenNumberOfColor - 1 == gameState.currentColor){ //TODO: Was ist die Minimale Grösse?
+void selectColorInGameUP() {
+    if (chosenNumberOfColor - 1 == gameState.currentColor) { //TODO: Was ist die Minimale Grösse?
         gameState.currentColor = 0;
-    }
-    else{
+    } else {
         gameState.currentColor++;
     }
 
 }
 
-void selectColorInGameDOWN(){
-    if(gameState.currentColor == 0){ //TODO: Was ist die Minimale Grösse?
+void selectColorInGameDOWN() {
+    if (gameState.currentColor == 0) { //TODO: Was ist die Minimale Grösse?
         gameState.currentColor = chosenNumberOfColor - 1;
-    }
-    else{
+    } else {
         gameState.currentColor--;
     }
 }
-void wonScreen(){
+
+void wonScreen() {
     gameState.screen = WON;
     UpdateLayout();
     DrawScreen();
-     while(!ShouldEndGame()){
-         if (ButtonHasBeenPressed(ENTER)) { // TODO
+    while (!ShouldEndGame()) {
+        if (ButtonHasBeenPressed(ENTER)) { // TODO
             return;
         }
         DrawScreen();
-     }
+    }
 }
-void lostScreen(){
+
+void lostScreen() {
     gameState.screen = LOST;
     UpdateLayout();
     DrawScreen();
-     while(!ShouldEndGame()){
-         if (ButtonHasBeenPressed(ENTER)) { // TODO
+    while (!ShouldEndGame()) {
+        if (ButtonHasBeenPressed(ENTER)) { // TODO
             return;
         }
         DrawScreen();
-     }
+    }
 }
-
-
-
