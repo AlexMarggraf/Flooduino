@@ -27,11 +27,10 @@ static Color colors[8] = {
 };
 static Color ledScreen[64][64];
 
-static const int wantedMargin = 10;
-static int actualMargin = -1;
+static const int wantedFieldOffset = 10;
 static int fieldBlockSize = -1;
 static int fieldOffset = -1;
-static const int colSelectionBlockSize = 5;
+static const int colSelectionBlockSize = 3;
 
 // rendering of the different screen states to the color-array ledScreen
 void RenderTitleLedScreen(void);
@@ -49,8 +48,8 @@ void ResetLedScreen(void);
 void DrawDebugInformation(void);
 
 // utility render functions (for rendering layout onto the ledScreen)
-void RenderField(bool colorful);
-void RenderColorSelection(int selectedColor);
+void RenderField(bool colorful, bool highlighted);
+void RenderColorSelection(int selectedColor, bool highlighted);
 void RenderNumberOfMoves(void);
 
 // display utility functions
@@ -99,9 +98,8 @@ void InitScreen(const char* name) {
 }
 
 void UpdateLayout(void) {
-    fieldBlockSize = (64 - wantedMargin)/gameState.fieldSize; 
-    actualMargin = 64 - fieldBlockSize*gameState.fieldSize;
-    fieldOffset = 64 - gameState.fieldSize*fieldBlockSize;
+    fieldBlockSize = (64 - (wantedFieldOffset + 1))/gameState.fieldSize;
+    fieldOffset = 64 - gameState.fieldSize*fieldBlockSize - 1;
 }
 
 void TerminateScreen(void) {
@@ -118,24 +116,24 @@ void RenderTitleLedScreen(void) {
 }
 
 void RenderColorSelectionLedScreen(void){
-    RenderColorSelection(-1);
-    RenderField(false);
+    RenderColorSelection(-1, true);
+    RenderField(false, false);
 }
 
 void RenderSizeSelectionLedScreen(void){
-    RenderColorSelection(-1);
-    RenderField(false);
+    RenderColorSelection(-1, false);
+    RenderField(false, true);
 }
 
 
 void RenderGameLedScreen(void) {
 
-    RenderField(true);
+    RenderField(true, false);
 
-    RenderColorSelection(gameState.currentColor);
+    RenderColorSelection(gameState.currentColor, false);
 
     // draw the selected color at the top left of the field
-    RenderRectFilled((Point){0, 0}, fieldOffset, fieldOffset, colors[gameState.currentColor]);
+    RenderRectFilled((Point){1, 1}, fieldOffset - 1, fieldOffset - 1, colors[gameState.currentColor]);
 
     RenderNumberOfMoves();
 }
@@ -179,7 +177,8 @@ void DrawDebugInformation(void) {
  * @param[in] colorful Specifies if the field should be rendered colorful. 
  *                     If true, the contents of gameState.field are rendered, otherwise a checkerboard pattern is rendered.
  */
-void RenderField(bool colorful) {
+void RenderField(bool colorful, bool highlighted) {
+
     if (colorful) {
         // draw field
         for (int i = 0; i < gameState.fieldSize; i++) {
@@ -195,19 +194,29 @@ void RenderField(bool colorful) {
             }
         }
     }
+
+    if (highlighted) {
+        int o = fieldOffset - 1;
+        RenderRectOutline((Point){o, o}, 64 - o, 64 - o, WHITE);
+    }
 }
 
 /** 
  * Render color selection bar, with the in selectedColor specified color (if non-negative).
  * If selecedColor is negative, only the color selection bar is rendered, without highlight. 
  */
-void RenderColorSelection(int selectedColor) {
+void RenderColorSelection(int selectedColor, bool highlighted) {
     // draw color selection bar
-    // TODO this could be optimized (only two nested for-loops)
     for (int c = 0; c < gameState.numberOfColors; c++) {
         int colBlockOffset = 64 - (colSelectionBlockSize + 1)*(c + 1);
         Color currCol = colors[c];
         RenderRectFilled((Point){1, colBlockOffset}, colSelectionBlockSize, colSelectionBlockSize, currCol);
+    }
+
+    if (highlighted) {
+        int height = (colSelectionBlockSize + 1) * gameState.numberOfColors + 1;
+        int offset = 64 - height;
+        RenderRectOutline((Point){0, offset}, colSelectionBlockSize + 2, height, WHITE);
     }
     
     if (selectedColor < 0) {
@@ -227,7 +236,7 @@ void RenderNumberOfMoves(void) {
     // draw the moves
     int horizontalSpace = (64 - fieldOffset) / 2 * 2;
     for (int i = 0; i < gameState.numberOfMoves; i++) {
-        RenderDot((Point){i * 2 % horizontalSpace + fieldOffset + 1, i/(horizontalSpace/2) * 2}, GRAY);
+        RenderDot((Point){i * 2 % horizontalSpace + fieldOffset + 1, i/(horizontalSpace/2) * 2 + 1}, GRAY);
     }
 }
 

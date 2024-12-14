@@ -39,7 +39,7 @@ typedef struct GameState {
     int numberOfColors;
     int numberOfMoves;
     int currentColor;
-    int maxNumberOfMoves;
+    int maxNumberOfMoves; // TODO this value is currently unused..
 } GameState;
 
 /**
