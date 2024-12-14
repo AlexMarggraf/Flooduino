@@ -42,6 +42,14 @@ typedef struct GameState {
     int maxNumberOfMoves;
 } GameState;
 
+/**
+ * Struct representing a point in a two-dimensional array
+ */
+typedef struct {
+    int x;
+    int y;
+} Point;
+
 // This is the global variable representing the current state of the game. 
 extern GameState gameState;
 

@@ -31,7 +31,7 @@ static const int wantedMargin = 10;
 static int actualMargin = -1;
 static int fieldBlockSize = -1;
 static int fieldOffset = -1;
-static const int colSelectionBlockSize = 2;
+static const int colSelectionBlockSize = 5;
 
 // rendering of the different screen states to the color-array ledScreen
 void RenderTitleLedScreen(void);
@@ -51,8 +51,13 @@ void DrawDebugInformation(void);
 // utility render functions (for rendering layout onto the ledScreen)
 void RenderField(bool colorful);
 void RenderColorSelection(int selectedColor);
-void RenderSelectedColor(void);
 void RenderNumberOfMoves(void);
+
+// display utility functions
+void RenderRectFilled(Point p, int w, int h, Color c);
+void RenderRectOutline(Point p, int w, int h, Color c);
+void RenderDot(Point p, Color c);
+void FillScreen(Color c);
 
 // public functions
 //--------------------------------------------------------------------------------------
@@ -109,11 +114,7 @@ bool ShouldEndGame(void) {
 //--------------------------------------------------------------------------------------
 
 void RenderTitleLedScreen(void) {
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
-            ledScreen[y][x] = BLUE;
-        }
-    }
+    FillScreen(BLUE);
 }
 
 void RenderColorSelectionLedScreen(void){
@@ -134,29 +135,17 @@ void RenderGameLedScreen(void) {
     RenderColorSelection(gameState.currentColor);
 
     // draw the selected color at the top left of the field
-    for (int y = 0; y < fieldOffset; y++) {
-        for (int x = 0; x < fieldOffset; x++) {
-            ledScreen[y][x] = colors[gameState.currentColor];
-        }
-    }
+    RenderRectFilled((Point){0, 0}, fieldOffset, fieldOffset, colors[gameState.currentColor]);
 
     RenderNumberOfMoves();
 }
 
 void RenderWonLedScreen(void){
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
-            ledScreen[y][x] = GREEN;
-        }
-    }
+    FillScreen(GREEN);
 }
 
 void RenderLostLedScreen(void){
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
-            ledScreen[y][x] = RED;
-        }
-    }
+    FillScreen(RED);
 }
 
 void ShowLedScreen(void) {
@@ -173,11 +162,7 @@ void ShowLedScreen(void) {
  * 
  */
 void ResetLedScreen(void) {
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
-            ledScreen[y][x] = BLANK;
-        }
-    }
+    FillScreen(BLANK);
 }
 
 /**
@@ -197,15 +182,16 @@ void DrawDebugInformation(void) {
 void RenderField(bool colorful) {
     if (colorful) {
         // draw field
-        for (int y = 0; y < gameState.fieldSize*fieldBlockSize; y++) {
-            for (int x = 0; x < gameState.fieldSize*fieldBlockSize; x++) {
-                ledScreen[y+fieldOffset][x+fieldOffset] = colors[gameState.field[y/fieldBlockSize][x/fieldBlockSize]];
+        for (int i = 0; i < gameState.fieldSize; i++) {
+            for (int j = 0; j < gameState.fieldSize; j++) {
+                RenderRectFilled((Point) {j * fieldBlockSize + fieldOffset, i * fieldBlockSize + fieldOffset}, fieldBlockSize, fieldBlockSize, colors[gameState.field[i][j]]);
             }
         }
     } else {
-        for (int y = 0; y < gameState.fieldSize*fieldBlockSize; y++) {
-            for (int x = 0; x < gameState.fieldSize*fieldBlockSize; x++) {
-                ledScreen[y+fieldOffset][x+fieldOffset] = (y/fieldBlockSize+x/fieldBlockSize)%2 == 0 ? WHITE : BLANK;
+        for (int i = 0; i < gameState.fieldSize; i++) {
+            for (int j = 0; j < gameState.fieldSize; j++) {
+                Color col = (i+j)%2 == 0 ? WHITE : BLANK;
+                RenderRectFilled((Point) {j * fieldBlockSize + fieldOffset, i * fieldBlockSize + fieldOffset}, fieldBlockSize, fieldBlockSize, col);
             }
         }
     }
@@ -221,11 +207,7 @@ void RenderColorSelection(int selectedColor) {
     for (int c = 0; c < gameState.numberOfColors; c++) {
         int colBlockOffset = 64 - (colSelectionBlockSize + 1)*(c + 1);
         Color currCol = colors[c];
-        for (int y = 0; y < colSelectionBlockSize; y++) {
-            for (int x = 0; x < colSelectionBlockSize; x++) {
-                ledScreen[y+colBlockOffset][x+1] = currCol;
-            }
-        }
+        RenderRectFilled((Point){1, colBlockOffset}, colSelectionBlockSize, colSelectionBlockSize, currCol);
     }
     
     if (selectedColor < 0) {
@@ -234,18 +216,9 @@ void RenderColorSelection(int selectedColor) {
 
     // draw highlight of currently selected color
     int colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (selectedColor + 1) - 1;
-    for (int y = 0; y < colSelectionBlockSize + 2; y++) {
-        for (int x = 0; x < colSelectionBlockSize + 2; x++) {
-            if (x == 0 || x == colSelectionBlockSize + 1 || y == 0 || y == colSelectionBlockSize + 1) {
-                ledScreen[y+colHighlightOffset][x] = WHITE;
-            }
-        }
-    }
+    RenderRectOutline((Point){0, colHighlightOffset}, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
 }
 
-void RenderSelectedColor(void) {
-
-}
 
 /**
  * Renders the number of moves done until now, in the upper right part of the screen as grey dots
@@ -254,6 +227,52 @@ void RenderNumberOfMoves(void) {
     // draw the moves
     int horizontalSpace = (64 - fieldOffset) / 2 * 2;
     for (int i = 0; i < gameState.numberOfMoves; i++) {
-        ledScreen[i/(horizontalSpace/2) * 2][i * 2 % horizontalSpace + fieldOffset + 1] = GRAY;
+        RenderDot((Point){i * 2 % horizontalSpace + fieldOffset + 1, i/(horizontalSpace/2) * 2}, GRAY);
+    }
+}
+
+/**
+ * Renders a filled rectangle that starts at the top left point p and extends with width w to the right and with height h down. 
+ */
+void RenderRectFilled(Point p, int w, int h, Color c) {
+    for (int y = p.y; y < p.y + h; y++) {
+        for (int x = p.x; x < p.x + w; x++) {
+            ledScreen[y][x] = c;
+        }
+    }
+}
+
+/**
+ * Renders a filled rectangle that starts at the top left point p and extends with width w to the right and with height h down. 
+ */
+void RenderRectOutline(Point p, int w, int h, Color c) {
+    for (int y = p.y; y < p.y + h; y++) {
+        ledScreen[y][p.x] = c;
+    }
+    for (int y = p.y; y < p.y + h; y++) {
+        ledScreen[y][p.x + w - 1] = c;
+    }
+    for (int x = p.x; x < p.x + w; x++) {
+        ledScreen[p.y][x] = c;
+    }
+    for (int x = p.x; x < p.x + w; x++) {
+        ledScreen[p.y + h - 1][x] = c;
+    }
+}
+/**
+ * Draws a dot at the specified location with the specified color. 
+ */
+void RenderDot(Point p, Color c) {
+    ledScreen[p.y][p.x] = c;
+}
+
+/**
+ * Fill the LED-screen with one color
+ */
+void FillScreen(Color c) {
+    for (int y = 0; y < 64; y++) {
+        for (int x = 0; x < 64; x++) {
+            ledScreen[y][x] = c;
+        }
     }
 }

@@ -106,12 +106,6 @@ void SetInitialState() {
     }
 }
 
-// Struktur für Koordinaten
-typedef struct {
-    int x;
-    int y;
-} Point;
-
 // Funktion, um den Flood-It-Algorithmus auszuführen
 void floodFillIterative() {
     int originalColor = gameState.field[0][0]; // Die ursprüngliche Farbe oben links
