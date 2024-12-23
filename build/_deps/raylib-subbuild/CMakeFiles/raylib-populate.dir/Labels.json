@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/raylib-populate"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/1c47d2ca32d16c82f13099ed4c92cb66/raylib-populate.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/4bbc98170992616cf7b511b274eec28f/raylib-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/CMakeFiles/247da07ccce6baed165bfe0326f35d41/raylib-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"raylib-populate"
+		],
+		"name" : "raylib-populate"
+	}
+}

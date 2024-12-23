@@ -1,0 +1,10 @@
+^C:\USERS\ALEXA\ONEDRIVE\DESKTOP\FLOODUINO\BUILD\_DEPS\RAYLIB-SUBBUILD\CMAKEFILES\1C47D2CA32D16C82F13099ED4C92CB66\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild -BC:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/alexa/OneDrive/Desktop/Flooduino/build/_deps/raylib-subbuild/raylib-populate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

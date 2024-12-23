@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\CMakeFiles\2fd788828293679ac2aeb52c4ca957dc\update_mappings.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-src\src\external\glfw\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-src\src\external\glfw\src\mappings.h.in">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-src\src\external\glfw\CMake\GenerateMappings.cmake" />
+    <None Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-build\raylib\external\glfw\src\CMakeFiles\update_mappings" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A4996206-ED15-35CB-ADA9-A22FC8D0D76C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{CC5C74A5-070E-36BA-9024-5B3E59C16358}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

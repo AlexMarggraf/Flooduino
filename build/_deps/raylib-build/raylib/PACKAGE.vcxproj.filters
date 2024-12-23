@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\CMakeFiles\b0b0989736eb6d6c6ff775d96b7b7f1d\PACKAGE_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A4996206-ED15-35CB-ADA9-A22FC8D0D76C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

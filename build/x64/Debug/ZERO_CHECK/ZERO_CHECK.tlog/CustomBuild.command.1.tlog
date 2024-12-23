@@ -1,0 +1,10 @@
+^C:\USERS\ALEXA\ONEDRIVE\DESKTOP\FLOODUINO\BUILD\CMAKEFILES\9EBF15041DC051B1218C99456A215B7A\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/alexa/OneDrive/Desktop/Flooduino -BC:/Users/alexa/OneDrive/Desktop/Flooduino/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/alexa/OneDrive/Desktop/Flooduino/build/raylib-game-template.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

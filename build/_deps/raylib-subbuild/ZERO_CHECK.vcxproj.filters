@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\1c47d2ca32d16c82f13099ed4c92cb66\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7D6E3920-1E6E-3ABC-9FE5-537D23479D41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

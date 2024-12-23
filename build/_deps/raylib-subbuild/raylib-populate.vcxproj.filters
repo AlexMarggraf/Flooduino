@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\247da07ccce6baed165bfe0326f35d41\raylib-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\4bbc98170992616cf7b511b274eec28f\raylib-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\1c47d2ca32d16c82f13099ed4c92cb66\raylib-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\alexa\OneDrive\Desktop\Flooduino\build\_deps\raylib-subbuild\CMakeFiles\raylib-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7D6E3920-1E6E-3ABC-9FE5-537D23479D41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
