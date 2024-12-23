@@ -13,22 +13,30 @@ void enterButtonISR();
 void upButtonISR();
 void downButtonISR();
 
+const int enterPin = 18;
+const int upPin = 2;
+const int downPin = 3;
+
 void setupTest(){
-    pinMode(3, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(3), upButtonISR, FALLING);
+    pinMode(enterPin, INPUT_PULLUP);
+    pinMode(downPin, INPUT_PULLUP);
+    pinMode(upPin, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(enterPin), enterButtonISR, FALLING);
+    attachInterrupt(digitalPinToInterrupt(downPin), downButtonISR, FALLING);
+    attachInterrupt(digitalPinToInterrupt(upPin), upButtonISR, FALLING);
 }
 
-bool buttonHasBeenPressed(Button b){
-  if(b == ENTER & enterPresses > 0){
+bool buttonHasBeenPressed(Button b) {
+  if (b == ENTER & enterPresses > 0) {
     enterPresses -= 1;
     return true;
-  }else if(b == UP & upPresses > 0){
+  } else if (b == UP & upPresses > 0) {
     upPresses -= 1;
     return true;
-  }else if(b == DOWN & downPresses >0){
+  } else if (b == DOWN & downPresses >0) {
     downPresses -= 1;
     return true;
-  }else{
+  } else {
     return false;
   }
 }
@@ -58,7 +66,7 @@ void upButtonISR(){
 void downButtonISR(){
   int currentTime = millis();
 
-  if(currentTime - lastUpInterrupt < 200){
+  if(currentTime - lastDownInterrupt < 200){
     return;
   }
 
