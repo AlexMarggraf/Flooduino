@@ -2,35 +2,49 @@
  * this file implements the functions declared in output.h using raylib. 
 */
 
-// todos (p-vf):
-// TODO differentiate the visuals of color and size selection screen
-// TODO implement the static screens (title, won, lost)
+#include "RGBmatrixPanel.h"
 
-#include "raylib.h"
-#include "../common.h"
+#include "bit_bmp.h"
+#include "fonts.h"
+#include <string.h>
+
+#include "common.h"
 #include "output.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+typedef uint16_t Color;
 
 static int screenWidth = 650;
 static int screenHeight = 650;
-static Color colors[8] = {
-    { 255, 0, 0, 255 },      // Pure Red
-    { 255, 255, 0, 255 },    // Pure Yellow
-    { 0, 165, 255, 255 },    // Light Blue
-    { 0, 128, 0, 255 },      // Medium Green
-    { 255, 165, 0, 255 },    // Pure Orange
-    { 0, 0, 165, 255 },      // Dark Blue
-    { 255, 224, 189, 255 },  // Skin Color
-    { 100, 0, 90, 255 }      // Purple
-};
-static Color ledScreen[64][64];
+static Color colors[8]; // initialized later (in InitScreen)
+
+#define GRAY matrix.Color333(2, 2, 2)
+#define WHITE matrix.Color333(7, 7, 7)
+#define BLACK matrix.Color333(0, 0, 0)
+
+
+//static Color ledScreen[64][64]; // TODO has to be replaced
+
+//#define CLK  8   // USE THIS ON ADAFRUIT METRO M0, etc.
+//#define CLK A4 // USE THIS ON METRO M4 (not M0)
+#define CLK 11 // USE THIS ON ARDUINO MEGA
+#define OE   9
+#define LAT 10
+#define A   A0
+#define B   A1
+#define C   A2
+#define D   A3
+#define E   A4
+
+RGBmatrixPanel matrix(A, B, C, D, E, CLK, LAT, OE, false, 64);
 
 static const int wantedFieldOffset = 10;
 static int fieldBlockSize = -1;
 static int fieldOffset = -1;
 static const int colSelectionBlockSize = 3;
+
+static GameState prevGameState = { };
 
 // rendering of the different screen states to the color-array ledScreen
 void RenderTitleLedScreen(void);
@@ -41,11 +55,11 @@ void RenderWonLedScreen(void);
 void RenderLostLedScreen(void);
 
 // show/reset the contents of ledScreen
-void ShowLedScreen(void);
+//void ShowLedScreen(void); // raylib specific
 void ResetLedScreen(void);
 
 // debugging
-void DrawDebugInformation(void);
+//void DrawDebugInformation(void); // raylib specific
 
 // utility render functions (for rendering layout onto the ledScreen)
 void RenderField(bool colorful, bool highlighted);
@@ -58,13 +72,22 @@ void RenderRectOutline(Point p, int w, int h, Color c);
 void RenderDot(Point p, Color c);
 void FillScreen(Color c);
 
+bool gameStateEqual(GameState g1, GameState g2) {
+  // NOTE: the fields of the two gamestates are not checked because i don't know how to do allat
+  //   + it doesn't matter because everytime the field changes, another variable changes as well.
+  return g1.screen == g2.screen && g1.fieldSize == g2.fieldSize && g1.numberOfColors == g2.numberOfColors && g1.numberOfMoves == g2.numberOfMoves && g1.currentColor == g2.currentColor && g1.maxNumberOfMoves == g2.maxNumberOfMoves;
+}
+
 // public functions
 //--------------------------------------------------------------------------------------
 void DrawScreen(void) {
-    BeginDrawing();
+    //BeginDrawing(); // raylib specific
 
-    ClearBackground(BLACK);
-
+    //ClearBackground(BLACK); // raylib specific
+    if (gameStateEqual(prevGameState, gameState)) {
+      prevGameState = gameState;
+      return;
+    }
     ResetLedScreen();
 
     switch(gameState.screen)
@@ -78,23 +101,29 @@ void DrawScreen(void) {
         default: break;
     }
 
-    ShowLedScreen();
+    //ShowLedScreen(); // raylib specific
 
-    DrawDebugInformation();
+    //DrawDebugInformation(); // raylib specific
 
-    DrawFPS(screenWidth - 30, screenHeight - 30);
+    //DrawFPS(screenWidth - 30, screenHeight - 30); // raylib specific
 
-    EndDrawing();
+    //EndDrawing(); // raylib specific
+
+    prevGameState = gameState;
 }
 
 void InitScreen(const char* name) {
-
-    // Initialization
-    InitWindow(screenWidth, screenHeight, name);
-
-    SetTargetFPS(60);       // Set our game to run at 60 frames-per-second
-
-    // TODO change this
+    colors[0] = matrix.Color333(7, 0, 0);      // Pure Red
+    colors[1] = matrix.Color333(7, 7, 0);      // Pure Yellow
+    colors[2] = matrix.Color333(0, 5, 7);      // Light Blue
+    colors[3] = matrix.Color333(0, 4, 0);      // Medium Green
+    colors[4] = matrix.Color333(7, 5, 0);      // Pure Orange
+    colors[5] = matrix.Color333(0, 0, 5);      // Dark Blue
+    colors[6] = matrix.Color333(7, 6, 6);      // Skin Color
+    colors[7] = matrix.Color333(3, 0, 3);      // Purple
+    Serial.begin(115200);
+    matrix.begin();
+    delay(500);
 }
 
 void UpdateLayout(void) {
@@ -103,16 +132,17 @@ void UpdateLayout(void) {
 }
 
 void TerminateScreen(void) {
-    CloseWindow();
+    //CloseWindow();
 }
 
 bool ShouldEndGame(void) {
-    return WindowShouldClose();
+    //return WindowShouldClose(); // raylib specific
+    return false; 
 }
 //--------------------------------------------------------------------------------------
 
 void RenderTitleLedScreen(void) {
-    FillScreen(BLUE);
+    FillScreen(matrix.Color333(0,0,7));
 }
 
 void RenderColorSelectionLedScreen(void){
@@ -139,38 +169,28 @@ void RenderGameLedScreen(void) {
 }
 
 void RenderWonLedScreen(void){
-    FillScreen(GREEN);
+    FillScreen(matrix.Color333(0,7,0)); // green
 }
 
 void RenderLostLedScreen(void){
-    FillScreen(RED);
-}
-
-void ShowLedScreen(void) {
-    int offset = 10;
-    int pixelSize = 10;
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
-            DrawCircle(x * pixelSize + offset, y * pixelSize + offset, pixelSize/2, ledScreen[y][x]);
-        }
-    }
+    FillScreen(matrix.Color333(7,0,0)); // red
 }
 
 /**
  * 
  */
 void ResetLedScreen(void) {
-    FillScreen(BLANK);
+    matrix.fillRect(0,0, matrix.width(), matrix.height(), BLACK);
 }
 
 /**
  * Draws all the numbers of gameState (except the field array) to the screen. 
  */
-void DrawDebugInformation(void) {
+/*void DrawDebugInformation(void) {
     char a[150];
     int len = sprintf(&a, "screen: %d\nnumberOfMoves: %d\ncurrentColor: %d\nfieldSize: %d\nnumberOfColors: %d", gameState.screen, gameState.numberOfMoves, gameState.currentColor, gameState.fieldSize, gameState.numberOfColors);
     DrawText(a, 20,150, 5, WHITE);
-}
+}*/
 
 /**
  * Renders the field in the bottom right corner. 
@@ -189,7 +209,7 @@ void RenderField(bool colorful, bool highlighted) {
     } else {
         for (int i = 0; i < gameState.fieldSize; i++) {
             for (int j = 0; j < gameState.fieldSize; j++) {
-                Color col = (i+j)%2 == 0 ? WHITE : BLANK;
+                Color col = (i+j)%2 == 0 ? WHITE : BLACK;
                 RenderRectFilled((Point) {j * fieldBlockSize + fieldOffset, i * fieldBlockSize + fieldOffset}, fieldBlockSize, fieldBlockSize, col);
             }
         }
@@ -244,44 +264,25 @@ void RenderNumberOfMoves(void) {
  * Renders a filled rectangle that starts at the top left point p and extends with width w to the right and with height h down. 
  */
 void RenderRectFilled(Point p, int w, int h, Color c) {
-    for (int y = p.y; y < p.y + h; y++) {
-        for (int x = p.x; x < p.x + w; x++) {
-            ledScreen[y][x] = c;
-        }
-    }
+    matrix.fillRect(p.x, p.y, w, h, c);
 }
 
 /**
  * Renders a filled rectangle that starts at the top left point p and extends with width w to the right and with height h down. 
  */
 void RenderRectOutline(Point p, int w, int h, Color c) {
-    for (int y = p.y; y < p.y + h; y++) {
-        ledScreen[y][p.x] = c;
-    }
-    for (int y = p.y; y < p.y + h; y++) {
-        ledScreen[y][p.x + w - 1] = c;
-    }
-    for (int x = p.x; x < p.x + w; x++) {
-        ledScreen[p.y][x] = c;
-    }
-    for (int x = p.x; x < p.x + w; x++) {
-        ledScreen[p.y + h - 1][x] = c;
-    }
+    matrix.drawRect(p.x, p.y, w, h, c);
 }
 /**
  * Draws a dot at the specified location with the specified color. 
  */
 void RenderDot(Point p, Color c) {
-    ledScreen[p.y][p.x] = c;
+    matrix.drawPixel(p.x, p.y, c);
 }
 
 /**
  * Fill the LED-screen with one color
  */
 void FillScreen(Color c) {
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
-            ledScreen[y][x] = c;
-        }
-    }
+    matrix.fillRect(0, 0, matrix.width(), matrix.height(), c);
 }

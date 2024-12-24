@@ -1,13 +1,13 @@
 #include <Arduino.h>
 #include "input.h"
 
-volatile int enterPresses = 0;
-volatile int upPresses = 0;
-volatile int downPresses = 0;
+volatile static int enterPresses = 0;
+volatile static int upPresses = 0;
+volatile static int downPresses = 0;
 
-volatile int lastEnterInterrupt = 0;
-volatile int lastUpInterrupt = 0;
-volatile int lastDownInterrupt = 0;
+volatile static int lastEnterInterrupt = 0;
+volatile static int lastUpInterrupt = 0;
+volatile static int lastDownInterrupt = 0;
 
 void enterButtonISR();
 void upButtonISR();
@@ -17,7 +17,7 @@ const int enterPin = 18;
 const int upPin = 2;
 const int downPin = 3;
 
-void setupTest(){
+void setupInput(){
     pinMode(enterPin, INPUT_PULLUP);
     pinMode(downPin, INPUT_PULLUP);
     pinMode(upPin, INPUT_PULLUP);

@@ -11,7 +11,7 @@ typedef enum Button {
     DOWN
 } Button;
 
-void setupTest();
+void setupInput();
 
 /**
  * Checks, whether the specified button has been pressed since last checked. 
