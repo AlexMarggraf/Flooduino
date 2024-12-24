@@ -46,10 +46,12 @@ public class PngToArray{
 
     public static void main(String[] args){
         PngToArray pngArrStartScreen = new PngToArray("start_screen.png", "start_screen");
-        PngToArray pngArrEndScreen = new PngToArray("end_screen.png", "end_screen");
+        PngToArray pngArrGameOver = new PngToArray("game_over.png", "game_over");
+        PngToArray pngArrYouWon = new PngToArray("you_won.png", "you_won");
 
 
         pngArrStartScreen.convertPngToArray();
-        pngArrEndScreen.convertPngToArray();
+        pngArrGameOver.convertPngToArray();
+        pngArrYouWon.convertPngToArray();
     }
 }

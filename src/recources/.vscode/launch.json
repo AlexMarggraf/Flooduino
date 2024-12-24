@@ -6,6 +6,13 @@
       "name": "PngToArray",
       "request": "launch",
       "mainClass": "PngToArray",
+      "projectName": "recources_bd79e43e"
+    },
+    {
+      "type": "java",
+      "name": "PngToArray",
+      "request": "launch",
+      "mainClass": "PngToArray",
       "projectName": "miscellaneous_5c02c197"
     },
     {
