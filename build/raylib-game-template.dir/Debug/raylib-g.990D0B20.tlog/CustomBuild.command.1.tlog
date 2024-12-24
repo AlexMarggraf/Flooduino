@@ -1,0 +1,10 @@
+^C:\USERS\ALEXANDER MARGGRAF\DESKTOP\FLOODUINO\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Alexander Marggraf/Desktop/Flooduino" "-BC:/Users/Alexander Marggraf/Desktop/Flooduino/build" --check-stamp-file "C:/Users/Alexander Marggraf/Desktop/Flooduino/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
