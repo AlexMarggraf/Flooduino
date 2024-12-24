@@ -19,7 +19,18 @@ static int screenWidth = 650;
 static int screenHeight = 650;
 static Color colors[8]; // initialized later (in InitScreen)
 
-//#define GRAY matrix.Color333(4, 4, 4)
+
+// ---------------- EYEBALL PROTECTION ----------------
+const int darkness = 1; // value range: 1 (full brightness) to 5 (less bright, nicer on the eyes over long periods)
+// scale values down
+constexpr int adj(int v) {
+  return v > 0 ? (v-1)/darkness + 1: 0;
+}
+// apply them on each call to Color333. A bit hacky.
+#define Color333(a, b, c) Color333(adj((a)), adj((b)), adj((c)))
+// ---------------- ------------------ ----------------
+
+
 #define WHITE matrix.Color333(7, 7, 7)
 #define BLACK matrix.Color333(0, 0, 0)
 
@@ -38,6 +49,7 @@ static Color colors[8]; // initialized later (in InitScreen)
 #define E   A4
 
 RGBmatrixPanel matrix(A, B, C, D, E, CLK, LAT, OE, false, 64);
+
 
 static const int wantedFieldOffset = 10;
 static int fieldBlockSize = -1;
@@ -72,6 +84,7 @@ void RenderRectOutline(Point p, int w, int h, Color c);
 void RenderDot(Point p, Color c);
 void FillScreen(Color c);
 
+// TODO (p-vf) implement the dynamic updating part less stupidly
 bool gameStateEqual(GameState g1, GameState g2) {
   // NOTE: the fields of the two gamestates are not checked because i don't know how to do allat
   //   + it doesn't matter because everytime the field changes, another variable changes as well.
