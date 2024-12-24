@@ -19,7 +19,7 @@ static int screenWidth = 650;
 static int screenHeight = 650;
 static Color colors[8]; // initialized later (in InitScreen)
 
-#define GRAY matrix.Color333(2, 2, 2)
+//#define GRAY matrix.Color333(4, 4, 4)
 #define WHITE matrix.Color333(7, 7, 7)
 #define BLACK matrix.Color333(0, 0, 0)
 
@@ -116,11 +116,11 @@ void InitScreen(const char* name) {
     colors[0] = matrix.Color333(7, 0, 0);      // Pure Red
     colors[1] = matrix.Color333(7, 7, 0);      // Pure Yellow
     colors[2] = matrix.Color333(0, 5, 7);      // Light Blue
-    colors[3] = matrix.Color333(0, 4, 0);      // Medium Green
-    colors[4] = matrix.Color333(7, 5, 0);      // Pure Orange
-    colors[5] = matrix.Color333(0, 0, 5);      // Dark Blue
-    colors[6] = matrix.Color333(7, 6, 6);      // Skin Color
-    colors[7] = matrix.Color333(3, 0, 3);      // Purple
+    colors[3] = matrix.Color333(0, 3, 0);      // Medium Green
+    colors[4] = matrix.Color333(7, 2, 0);      // Pure Orange
+    colors[5] = matrix.Color333(0, 0, 4);      // Dark Blue
+    colors[6] = matrix.Color333(7, 4, 3);      // Skin Color
+    colors[7] = matrix.Color333(2, 0, 2);      // Purple
     Serial.begin(115200);
     matrix.begin();
     delay(500);
@@ -256,7 +256,7 @@ void RenderNumberOfMoves(void) {
     // draw the moves
     int horizontalSpace = (64 - fieldOffset) / 2 * 2;
     for (int i = 0; i < gameState.numberOfMoves; i++) {
-        RenderDot((Point){i * 2 % horizontalSpace + fieldOffset + 1, i/(horizontalSpace/2) * 2 + 1}, GRAY);
+        RenderDot((Point){i * 2 % horizontalSpace + fieldOffset + 1, i/(horizontalSpace/2) * 2 + 1}, WHITE);
     }
 }
 
