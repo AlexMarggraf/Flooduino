@@ -9,12 +9,12 @@
  * This function has to be called once at the start of the application to initialize the screen.
  * @param[in] title this is the title of the window (only relevant for Raylib)
  */
-void InitScreen(const char* title); // TODO remove this parameter
+void InitScreen(const char* title);  // TODO remove this parameter
 
 /** 
  * Has to be called after initializing gameState and when gameState.fieldSize changed.
  */
-void UpdateLayout(void); 
+void UpdateLayout(void);
 
 /** 
  * Draws the screen according to the current gameState.
@@ -24,7 +24,7 @@ void DrawScreen(void);
 /**
  * Has to be called when the application ends. 
  */
-void TerminateScreen(void); // TODO this function was only required with raylib
+void TerminateScreen(void);  // TODO this function was only required with raylib
 
 /**
  * Returns whether the user wants to close the window.
@@ -33,4 +33,4 @@ void TerminateScreen(void); // TODO this function was only required with raylib
  */
 bool ShouldEndGame(void);
 
-#endif // OUTPUT_H
+#endif  // OUTPUT_H

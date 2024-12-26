@@ -6,9 +6,9 @@
 #define INPUT_H
 
 typedef enum Button {
-    ENTER,
-    UP,
-    DOWN
+  ENTER,
+  UP,
+  DOWN
 } Button;
 
 void setupInput();
@@ -18,4 +18,4 @@ void setupInput();
  */
 bool buttonHasBeenPressed(Button);
 
-#endif // INPUT_H
+#endif  // INPUT_H
