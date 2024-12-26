@@ -5,9 +5,9 @@ volatile static int enterPresses = 0;
 volatile static int upPresses = 0;
 volatile static int downPresses = 0;
 
-volatile static int lastEnterInterrupt = 0;
-volatile static int lastUpInterrupt = 0;
-volatile static int lastDownInterrupt = 0;
+volatile static long lastEnterInterrupt = 0;
+volatile static long lastUpInterrupt = 0;
+volatile static long lastDownInterrupt = 0;
 
 void enterButtonISR();
 void upButtonISR();
@@ -42,7 +42,7 @@ bool buttonHasBeenPressed(Button b) {
 }
 
 void enterButtonISR() {
-  int currentTime = millis();
+  long currentTime = millis();
 
   if ((currentTime - lastEnterInterrupt) < 200) {
     return;
@@ -53,7 +53,7 @@ void enterButtonISR() {
 }
 
 void upButtonISR() {
-  int currentTime = millis();
+  long currentTime = millis();
 
   if (currentTime - lastUpInterrupt < 200) {
     return;
@@ -64,7 +64,7 @@ void upButtonISR() {
 }
 
 void downButtonISR() {
-  int currentTime = millis();
+  long currentTime = millis();
 
   if (currentTime - lastDownInterrupt < 200) {
     return;

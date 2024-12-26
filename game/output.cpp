@@ -135,7 +135,7 @@ void InitScreen(const char* name) {
   colors[6] = matrix.Color333(2, 0, 2);  // Purple
   colors[7] = matrix.Color333(7, 2, 0);  // Pure Orange
   matrix.begin();
-  delay(500);
+  //delay(500);
 }
 
 void UpdateLayout(void) {

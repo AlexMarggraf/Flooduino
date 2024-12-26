@@ -1,17 +1,3 @@
-/*******************************************************************************************
-*
-*   raylib game template
-*
-*   <Game title>
-*   <Game description>
-*
-*   This game has been created using raylib (www.raylib.com)
-*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
-*
-*   Copyright (c) 2021 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "common.h"  // NOTE: Declares global (extern) variable and types
 #include "input.h"
 #include "output.h"
@@ -56,51 +42,51 @@ int** gameBoard;
 int chosenNumberOfColor;
 int maxSize;
 
-
-
 #define FPSerial Serial1
-
-DFRobotDFPlayerMini myDFPlayer;
+//DFRobotDFPlayerMini myDFPlayer;
 
 //----------------------------------------------------------------------------------
 // Main entry point
 //----------------------------------------------------------------------------------
 void setup() {
-  FPSerial.begin(9600);
-
-  //Serial.begin(115200);
-
-  /*Serial.println();
+  Serial.begin(115200);
+  //FPSerial.begin(9600); // Causes LED-Matrix not to work
+/*
+  Serial.println();
   Serial.println(F("DFRobot DFPlayer Mini Demo"));
   Serial.println(F("Initializing DFPlayer ... (May take 3~5 seconds)"));
-*/
-  if (!myDFPlayer.begin(FPSerial, /*isACK = */ true, /*doReset = */ true)) {  //Use serial to communicate with mp3.
-    /*Serial.println(F("Unable to begin:"));
+
+  bool isACK = true;
+  bool doReset = true;
+
+  if (!myDFPlayer.begin(FPSerial, isACK, doReset)) {  //Use serial to communicate with mp3.
+    Serial.println(F("Unable to begin:"));
     Serial.println(F("1.Please recheck the connection!"));
-    Serial.println(F("2.Please insert the SD card!"));*/
+    Serial.println(F("2.Please insert the SD card!"));
     while (true) {
       delay(0);  // Code to compatible with ESP8266 watch dog.
     }
-  }
-  //Serial.println(F("DFPlayer Mini online."));
+  } 
+  Serial.println(F("DFPlayer Mini online."));
 
-  myDFPlayer.volume(20);  //Set volume value. From 0 to 30
-  myDFPlayer.play(1);     //Play the first mp3
-
-  FPSerial.setTimeout(500);
-  delay(550);
-
+  */
 
   setupInput();
   SetInitialState();
   InitScreen("Prototype Flooduino");
   UpdateLayout();
+/*
+  myDFPlayer.volume(5); //Set volume value. From 0 to 30
+  myDFPlayer.play(1);   //Play the first mp3
 
+
+  FPSerial.setTimeout(500);
+  delay(550);
+  */
 }
 
 void loop() {
   // main game loop
-
   titleScreen();
   gameState.numberOfColors = 3;
   selectionModeSize();
