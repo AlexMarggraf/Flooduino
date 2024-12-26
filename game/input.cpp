@@ -13,7 +13,7 @@ void enterButtonISR();
 void upButtonISR();
 void downButtonISR();
 
-const int enterPin = 18;
+const int enterPin = 20;
 const int upPin = 2;
 const int downPin = 3;
 

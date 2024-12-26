@@ -21,7 +21,7 @@ static Color colors[8];  // initialized later (in InitScreen)
 
 
 // ---------------- EYEBALL PROTECTION ----------------
-const int darkness = 3;  // value range: 1 (full brightness) to 5 (less bright, nicer on the eyes over long periods)
+const int darkness = 5;  // value range: 1 (full brightness) to 5 (less bright, nicer on the eyes over long periods)
 // scale values down
 constexpr int adj(int v) {
   return v > 0 ? (v - 1) / darkness + 1 : 0;
@@ -134,7 +134,6 @@ void InitScreen(const char* name) {
   colors[5] = matrix.Color333(7, 4, 3);  // Skin Color
   colors[6] = matrix.Color333(2, 0, 2);  // Purple
   colors[7] = matrix.Color333(7, 2, 0);  // Pure Orange
-  Serial.begin(115200);
   matrix.begin();
   delay(500);
 }
