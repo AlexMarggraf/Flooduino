@@ -30,7 +30,13 @@ public class PngToArray{
                 int green = (pixel >> 8) & 0xff;
                 int blue = pixel & 0xff;
 
-                String hex = String.format("0X%02X%02X%02X", red, green, blue);
+                red = (int)Math.floor((red*31)/255);
+                green = (int)Math.floor((green*63)/255);
+                blue = (int)Math.floor((blue*31)/255);
+
+                int rgb = (red << 11) + (green << 5) + blue;
+
+                String hex = String.format("0X%04X", rgb);
                 values[64*j + i] = hex;
             }
         }
