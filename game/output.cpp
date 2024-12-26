@@ -5,6 +5,7 @@
 #include "RGBmatrixPanel.h"
 
 #include "bit_bmp.h"
+#include "image_bitmaps.h"
 #include "fonts.h"
 #include <string.h>
 
@@ -154,7 +155,7 @@ bool ShouldEndGame(void) {
 //--------------------------------------------------------------------------------------
 
 void RenderTitleLedScreen(void) {
-  FillScreen(matrix.Color333(0, 0, 7));
+  matrix.display_image(0,0, titleScreen, 64, 64);
 }
 
 void RenderColorSelectionLedScreen(void) {
@@ -181,11 +182,11 @@ void RenderGameLedScreen(void) {
 }
 
 void RenderWonLedScreen(void) {
-  FillScreen(matrix.Color333(0, 7, 0));  // green
+  matrix.display_image(0, 0, wonScreen, 64, 64);
 }
 
 void RenderLostLedScreen(void) {
-  FillScreen(matrix.Color333(7, 0, 0));  // red
+  matrix.display_image(0, 0 , lostScreen, 64, 64);
 }
 
 /**
