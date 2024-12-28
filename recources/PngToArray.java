@@ -68,8 +68,8 @@ public class PngToArray{
 
     public static void main(String[] args){
         PngToArray pngArrStartScreen = new PngToArray("start_screen.png", "start_screen");
-        PngToArray pngArrGameOver = new PngToArray("game_over.png", "game_over");
-        PngToArray pngArrYouWon = new PngToArray("you_won.png", "you_won");
+        PngToArray pngArrGameOver = new PngToArray("lost_screen.png", "lost_screen");
+        PngToArray pngArrYouWon = new PngToArray("won_screen.png", "won_screen");
 
 
         pngArrStartScreen.convertPngToArray();
