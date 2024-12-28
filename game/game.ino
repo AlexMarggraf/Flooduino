@@ -35,6 +35,13 @@ void wonScreen(void);
 void lostScreen(void);
 void SetInitialState(void);
 
+// DFPlayer shenanigans
+void nextSong(void);
+void resetDFPlayer(void);
+
+
+#define DFPlayerBusyPin 5
+#define DFPlayerNextSongPin 4
 
 int numberOfMoves;
 int fieldSizeCounter;
@@ -70,6 +77,10 @@ void setup() {
   Serial.println(F("DFPlayer Mini online."));
 
   */
+  
+  pinMode(DFPlayerBusyPin, INPUT_PULLUP);
+  pinMode(DFPlayerNextSongPin, OUTPUT);
+  loopSong();
 
   setupInput();
   SetInitialState();
@@ -89,12 +100,15 @@ void loop() {
   // main game loop
   titleScreen();
   gameState.numberOfColors = 3;
+  nextSong();
   selectionModeSize();
   gameState.currentColor = 2;
   selectionModeColors();
   chosenNumberOfColor = gameState.numberOfColors;
+  nextSong();
   SetGamefield();
   gameMode();
+  nextSong();
 }
 
 void SetGamefield() {
@@ -237,6 +251,7 @@ void selectionModeSize() {
   UpdateLayout();
   DrawScreen();
   while (!ShouldEndGame()) {
+    loopSong();
     // TODO implement logic here (this code was only for testing the visuals)
     if (buttonHasBeenPressed(UP)) {
       increaseFieldSize();
@@ -261,6 +276,7 @@ void selectionModeColors() {
   UpdateLayout();
   DrawScreen();
   while (!ShouldEndGame()) {
+    loopSong();
     // TODO implement logic here (this code was only for testing the visuals)
     if (buttonHasBeenPressed(UP)) {
       increaseNumberOfColors();
@@ -285,6 +301,7 @@ void titleScreen() {
   UpdateLayout();
   DrawScreen();
   while (!ShouldEndGame()) {
+    loopSong();
     if (buttonHasBeenPressed(ENTER)) {
       return;
     }
@@ -298,6 +315,7 @@ void gameMode() {
   UpdateLayout();
   DrawScreen();
   while (!ShouldEndGame()) {
+    loopSong();
     if (buttonHasBeenPressed(UP)) {
       selectColorInGameUP();
     }
@@ -311,12 +329,14 @@ void gameMode() {
       if (originalColor != gameState.currentColor) {
         floodFillIterative();
         if (is_won()) {
+          nextSong();
           wonScreen();
           return;
         }
 
         gameState.numberOfMoves--;
         if (gameState.numberOfMoves == 0) {
+          nextSong();
           lostScreen();
           return;
         }
@@ -347,6 +367,7 @@ void wonScreen() {
   UpdateLayout();
   DrawScreen();
   while (!ShouldEndGame()) {
+    loopSong();
     if (buttonHasBeenPressed(ENTER)) {  // TODO
       return;
     }
@@ -359,9 +380,29 @@ void lostScreen() {
   UpdateLayout();
   DrawScreen();
   while (!ShouldEndGame()) {
+    loopSong();
     if (buttonHasBeenPressed(ENTER)) {  // TODO
       return;
     }
     DrawScreen();
+  }
+}
+
+
+
+
+void nextSong() {
+  digitalWrite(DFPlayerNextSongPin, LOW);
+  delay(100);
+  digitalWrite(DFPlayerNextSongPin, HIGH);
+  delay(100);
+  //digitalWrite(DFPlayerNextSongPin, HIGH);
+}
+
+void loopSong() {
+  if (digitalRead(DFPlayerBusyPin) == 1) {
+    for (int i = 0; i < 4; i++) {
+      nextSong();
+    }
   }
 }

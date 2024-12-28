@@ -77,6 +77,7 @@ void ResetLedScreen(void);
 // utility render functions (for rendering layout onto the ledScreen)
 void RenderField(bool colorful, bool highlighted);
 void RenderColorSelection(int selectedColor, bool highlighted);
+void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlighted);
 void RenderNumberOfMoves(void);
 
 // display utility functions
@@ -84,13 +85,9 @@ void RenderRectFilled(Point p, int w, int h, Color c);
 void RenderRectOutline(Point p, int w, int h, Color c);
 void RenderDot(Point p, Color c);
 void FillScreen(Color c);
+// functions to dynamically update screen
+bool GameStateUnchanged();
 
-// TODO (p-vf) implement the dynamic updating part less stupidly
-bool gameStateEqual(GameState g1, GameState g2) {
-  // NOTE: the fields of the two gamestates are not checked because i don't know how to do allat
-  //   + it doesn't matter because everytime the field changes, another variable changes as well.
-  return g1.screen == g2.screen && g1.fieldSize == g2.fieldSize && g1.numberOfColors == g2.numberOfColors && g1.numberOfMoves == g2.numberOfMoves && g1.currentColor == g2.currentColor && g1.maxNumberOfMoves == g2.maxNumberOfMoves;
-}
 
 // public functions
 //--------------------------------------------------------------------------------------
@@ -98,12 +95,11 @@ void DrawScreen(void) {
   //BeginDrawing(); // raylib specific
 
   //ClearBackground(BLACK); // raylib specific
-  if (gameStateEqual(prevGameState, gameState)) {
+
+  if (GameStateUnchanged()) {
     prevGameState = gameState;
-    delay(10); // TODO remove this maybe if doesn't fix unresponsive buttons
     return;
   }
-  ResetLedScreen();
 
   switch (gameState.screen) {
     case TITLE: RenderTitleLedScreen(); break;
@@ -154,22 +150,52 @@ bool ShouldEndGame(void) {
 }
 //--------------------------------------------------------------------------------------
 
+bool GameStateUnchanged() {
+  GameState g1 = prevGameState;
+  GameState g2 = gameState;
+  // NOTE: the fields of the two gamestates are not checked because i don't know how to do allat
+  //   + it doesn't matter because everytime the field changes, another variable changes as well.
+  return g1.screen == g2.screen && g1.fieldSize == g2.fieldSize && g1.numberOfColors == g2.numberOfColors && g1.numberOfMoves == g2.numberOfMoves && g1.currentColor == g2.currentColor && g1.maxNumberOfMoves == g2.maxNumberOfMoves;
+}
+
+bool onlyHighlightedColorChanged() {
+  GameState g1 = prevGameState;
+  GameState g2 = gameState;
+  return g1.currentColor != g2.currentColor && g1.screen == g2.screen && g1.fieldSize == g2.fieldSize && g1.numberOfColors == g2.numberOfColors && g1.numberOfMoves == g2.numberOfMoves && g1.maxNumberOfMoves == g2.maxNumberOfMoves;
+}
+
 void RenderTitleLedScreen(void) {
+  ResetLedScreen();
+
   matrix.display_image(0,0, titleScreen, 64, 64);
 }
 
 void RenderColorSelectionLedScreen(void) {
+  ResetLedScreen();
+
   RenderColorSelection(-1, true);
   RenderField(false, false);
 }
 
 void RenderSizeSelectionLedScreen(void) {
+  ResetLedScreen();
+
   RenderColorSelection(-1, false);
   RenderField(false, true);
 }
 
 
 void RenderGameLedScreen(void) {
+
+  if (onlyHighlightedColorChanged()) {
+    UpdateColorSelection(prevGameState.currentColor, gameState.currentColor, false);
+    return;
+  }
+
+  ResetLedScreen();
+
+  ResetLedScreen();
+
 
   RenderField(true, false);
 
@@ -182,10 +208,14 @@ void RenderGameLedScreen(void) {
 }
 
 void RenderWonLedScreen(void) {
+  ResetLedScreen();
+
   matrix.display_image(0, 0, wonScreen, 64, 64);
 }
 
 void RenderLostLedScreen(void) {
+  ResetLedScreen();
+
   matrix.display_image(0, 0 , lostScreen, 64, 64);
 }
 
@@ -258,6 +288,23 @@ void RenderColorSelection(int selectedColor, bool highlighted) {
 
   // draw highlight of currently selected color
   int colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (selectedColor + 1) - 1;
+  RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
+}
+
+void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlighted) {
+  // draw color selection bar
+  if (highlighted) {
+    // TODO implement this
+    return;
+  }
+
+  // delete highlight of previously selected color
+  int colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (prevSelectedColor + 1) - 1;
+  RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, BLACK);
+  
+
+  // draw highlight of currently selected color
+  colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (selectedColor + 1) - 1;
   RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
 }
 
