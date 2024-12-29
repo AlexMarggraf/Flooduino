@@ -11,10 +11,10 @@
 //----------------------------------------------------------------------------------
 GameState gameState = { 0 };
 
-
-
+// the seed for the random colors in the game-field
 #define SEED_SOURCE analogRead(A8)
 
+// function declarations
 void SetGamefield(void);
 void floodFillIterative();
 void setNumberOfMoves(void);  //TODO: implement this function
@@ -37,11 +37,10 @@ void SetInitialState(void);
 
 // DFPlayer shenanigans
 void nextSong(void);
-void resetDFPlayer(void);
-
-
+void resetDFPlayer(void); // this method is not implemented in our design
 #define DFPlayerBusyPin 5
 #define DFPlayerNextSongPin 4
+
 
 int numberOfMoves;
 int fieldSizeCounter;
@@ -49,34 +48,11 @@ int** gameBoard;
 int chosenNumberOfColor;
 int maxSize;
 
-#define FPSerial Serial1
-//DFRobotDFPlayerMini myDFPlayer;
-
 //----------------------------------------------------------------------------------
 // Main entry point
 //----------------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
-  //FPSerial.begin(9600); // Causes LED-Matrix not to work
-/*
-  Serial.println();
-  Serial.println(F("DFRobot DFPlayer Mini Demo"));
-  Serial.println(F("Initializing DFPlayer ... (May take 3~5 seconds)"));
-
-  bool isACK = true;
-  bool doReset = true;
-
-  if (!myDFPlayer.begin(FPSerial, isACK, doReset)) {  //Use serial to communicate with mp3.
-    Serial.println(F("Unable to begin:"));
-    Serial.println(F("1.Please recheck the connection!"));
-    Serial.println(F("2.Please insert the SD card!"));
-    while (true) {
-      delay(0);  // Code to compatible with ESP8266 watch dog.
-    }
-  } 
-  Serial.println(F("DFPlayer Mini online."));
-
-  */
   
   pinMode(DFPlayerBusyPin, INPUT_PULLUP);
   pinMode(DFPlayerNextSongPin, OUTPUT);
@@ -84,16 +60,8 @@ void setup() {
 
   setupInput();
   SetInitialState();
-  InitScreen("Prototype Flooduino");
+  InitScreen();
   UpdateLayout();
-/*
-  myDFPlayer.volume(5); //Set volume value. From 0 to 30
-  myDFPlayer.play(1);   //Play the first mp3
-
-
-  FPSerial.setTimeout(500);
-  delay(550);
-  */
 }
 
 void loop() {
@@ -181,6 +149,9 @@ void floodFillIterative() {
   }
 }
 
+/**
+ * This method calculates the number of moves can make, based on the number of colors and the size of the field. 
+ */
 void setNumberOfMoves() {
   gameState.numberOfMoves = (int)gameState.fieldSize * 0.2975 * gameState.numberOfColors;
 }
@@ -250,7 +221,7 @@ void selectionModeSize() {
   gameState.screen = SIZE_SELECTION;
   UpdateLayout();
   DrawScreen();
-  while (!ShouldEndGame()) {
+  while (true) {
     loopSong();
     // TODO implement logic here (this code was only for testing the visuals)
     if (buttonHasBeenPressed(UP)) {
@@ -264,7 +235,7 @@ void selectionModeSize() {
     if (buttonHasBeenPressed(ENTER)) {
       setNumberOfMoves();
       UpdateLayout();
-      DrawScreen();
+      //DrawScreen();
       return;
     }
     DrawScreen();
@@ -275,7 +246,7 @@ void selectionModeColors() {
   gameState.screen = COLOR_SELECTION;
   UpdateLayout();
   DrawScreen();
-  while (!ShouldEndGame()) {
+  while (true) {
     loopSong();
     // TODO implement logic here (this code was only for testing the visuals)
     if (buttonHasBeenPressed(UP)) {
@@ -289,7 +260,7 @@ void selectionModeColors() {
     if (buttonHasBeenPressed(ENTER)) {
       setNumberOfMoves();
       UpdateLayout();
-      DrawScreen();
+      //DrawScreen();
       return;
     }
     DrawScreen();
@@ -300,7 +271,7 @@ void titleScreen() {
   gameState.screen = TITLE;
   UpdateLayout();
   DrawScreen();
-  while (!ShouldEndGame()) {
+  while (true) {
     loopSong();
     if (buttonHasBeenPressed(ENTER)) {
       return;
@@ -314,7 +285,7 @@ void gameMode() {
   gameState.screen = GAME;
   UpdateLayout();
   DrawScreen();
-  while (!ShouldEndGame()) {
+  while (true) {
     loopSong();
     if (buttonHasBeenPressed(UP)) {
       selectColorInGameUP();
@@ -366,7 +337,7 @@ void wonScreen() {
   gameState.screen = WON;
   UpdateLayout();
   DrawScreen();
-  while (!ShouldEndGame()) {
+  while (true) {
     loopSong();
     if (buttonHasBeenPressed(ENTER)) {  // TODO
       return;
@@ -379,7 +350,7 @@ void lostScreen() {
   gameState.screen = LOST;
   UpdateLayout();
   DrawScreen();
-  while (!ShouldEndGame()) {
+  while (true) {
     loopSong();
     if (buttonHasBeenPressed(ENTER)) {  // TODO
       return;

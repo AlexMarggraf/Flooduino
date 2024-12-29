@@ -22,7 +22,7 @@ static Color colors[8];  // initialized later (in InitScreen)
 
 
 // ---------------- EYEBALL PROTECTION ----------------
-const int darkness = 5;  // value range: 1 (full brightness) to 5 (less bright, nicer on the eyes over long periods)
+const int darkness = 1;  // value range: 1 (full brightness) to 5 (less bright, nicer on the eyes over long periods)
 // scale values down
 constexpr int adj(int v) {
   return v > 0 ? (v - 1) / darkness + 1 : 0;
@@ -36,7 +36,6 @@ constexpr int adj(int v) {
 #define BLACK matrix.Color333(0, 0, 0)
 
 
-//static Color ledScreen[64][64]; // TODO has to be replaced
 
 //#define CLK  8   // USE THIS ON ADAFRUIT METRO M0, etc.
 //#define CLK A4 // USE THIS ON METRO M4 (not M0)
@@ -71,9 +70,6 @@ void RenderLostLedScreen(void);
 //void ShowLedScreen(void); // raylib specific
 void ResetLedScreen(void);
 
-// debugging
-//void DrawDebugInformation(void); // raylib specific
-
 // utility render functions (for rendering layout onto the ledScreen)
 void RenderField(bool colorful, bool highlighted);
 void RenderColorSelection(int selectedColor, bool highlighted);
@@ -92,9 +88,6 @@ bool GameStateUnchanged();
 // public functions
 //--------------------------------------------------------------------------------------
 void DrawScreen(void) {
-  //BeginDrawing(); // raylib specific
-
-  //ClearBackground(BLACK); // raylib specific
 
   if (GameStateUnchanged()) {
     prevGameState = gameState;
@@ -111,28 +104,19 @@ void DrawScreen(void) {
     default: break;
   }
 
-  //ShowLedScreen(); // raylib specific
-
-  //DrawDebugInformation(); // raylib specific
-
-  //DrawFPS(screenWidth - 30, screenHeight - 30); // raylib specific
-
-  //EndDrawing(); // raylib specific
-
   prevGameState = gameState;
 }
 
-void InitScreen(const char* name) {
+void InitScreen(void) {
   colors[0] = matrix.Color333(7, 0, 0);  // Pure Red
   colors[1] = matrix.Color333(7, 7, 0);  // Pure Yellow
   colors[2] = matrix.Color333(0, 5, 7);  // Light Blue
   colors[3] = matrix.Color333(0, 3, 0);  // Medium Green
   colors[4] = matrix.Color333(0, 0, 4);  // Dark Blue
-  colors[5] = matrix.Color333(7, 4, 3);  // Skin Color
-  colors[6] = matrix.Color333(2, 0, 2);  // Purple
-  colors[7] = matrix.Color333(7, 2, 0);  // Pure Orange
+  colors[5] = matrix.Color333(7, 3, 3);  // Skin Color
+  colors[6] = matrix.Color333(2, 0, 1);  // Purple
+  colors[7] = matrix.Color333(1, 1, 2);  // dark Grey
   matrix.begin();
-  //delay(500);
 }
 
 void UpdateLayout(void) {
@@ -140,20 +124,12 @@ void UpdateLayout(void) {
   fieldOffset = 64 - gameState.fieldSize * fieldBlockSize - 1;
 }
 
-void TerminateScreen(void) {
-  //CloseWindow();
-}
-
-bool ShouldEndGame(void) {
-  //return WindowShouldClose(); // raylib specific
-  return false;
-}
 //--------------------------------------------------------------------------------------
 
 bool GameStateUnchanged() {
   GameState g1 = prevGameState;
   GameState g2 = gameState;
-  // NOTE: the fields of the two gamestates are not checked because i don't know how to do allat
+  // NOTE: the fields of the two gamestates are not checked because I don't know how to do that
   //   + it doesn't matter because everytime the field changes, another variable changes as well.
   return g1.screen == g2.screen && g1.fieldSize == g2.fieldSize && g1.numberOfColors == g2.numberOfColors && g1.numberOfMoves == g2.numberOfMoves && g1.currentColor == g2.currentColor && g1.maxNumberOfMoves == g2.maxNumberOfMoves;
 }
@@ -194,15 +170,10 @@ void RenderGameLedScreen(void) {
 
   ResetLedScreen();
 
-  ResetLedScreen();
-
-
   RenderField(true, false);
 
   RenderColorSelection(gameState.currentColor, false);
 
-  // draw the selected color at the top left of the field
-  RenderRectFilled((Point){ 1, 1 }, fieldOffset - 1, fieldOffset - 1, colors[gameState.currentColor]);
 
   RenderNumberOfMoves();
 }
@@ -219,21 +190,9 @@ void RenderLostLedScreen(void) {
   matrix.display_image(0, 0 , lostScreen, 64, 64);
 }
 
-/**
- * 
- */
 void ResetLedScreen(void) {
   matrix.fillRect(0, 0, matrix.width(), matrix.height(), BLACK);
 }
-
-/**
- * Draws all the numbers of gameState (except the field array) to the screen. 
- */
-/*void DrawDebugInformation(void) {
-    char a[150];
-    int len = sprintf(&a, "screen: %d\nnumberOfMoves: %d\ncurrentColor: %d\nfieldSize: %d\nnumberOfColors: %d", gameState.screen, gameState.numberOfMoves, gameState.currentColor, gameState.fieldSize, gameState.numberOfColors);
-    DrawText(a, 20,150, 5, WHITE);
-}*/
 
 /**
  * Renders the field in the bottom right corner. 
@@ -286,6 +245,10 @@ void RenderColorSelection(int selectedColor, bool highlighted) {
     return;
   }
 
+  // draw the selected color at the top left of the field
+  RenderRectFilled((Point){ 1, 1 }, fieldOffset - 1, fieldOffset - 1, colors[gameState.currentColor]);
+
+
   // draw highlight of currently selected color
   int colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (selectedColor + 1) - 1;
   RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
@@ -294,20 +257,25 @@ void RenderColorSelection(int selectedColor, bool highlighted) {
 void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlighted) {
   // draw color selection bar
   if (highlighted) {
-    // TODO implement this
+    // TODO implement this, if this function is used in the number of colors selection
     return;
   }
+
+  if (prevSelectedColor == selectedColor) {
+    return;
+  }
+
+  // draw the selected color at the top left of the field
+  RenderRectFilled((Point){ 1, 1 }, fieldOffset - 1, fieldOffset - 1, colors[gameState.currentColor]);
 
   // delete highlight of previously selected color
   int colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (prevSelectedColor + 1) - 1;
   RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, BLACK);
-  
 
   // draw highlight of currently selected color
   colHighlightOffset = 64 - (colSelectionBlockSize + 1) * (selectedColor + 1) - 1;
   RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
 }
-
 
 /**
  * Renders the number of moves done until now, in the upper right part of the screen as grey dots
@@ -333,6 +301,7 @@ void RenderRectFilled(Point p, int w, int h, Color c) {
 void RenderRectOutline(Point p, int w, int h, Color c) {
   matrix.drawRect(p.x, p.y, w, h, c);
 }
+
 /**
  * Draws a dot at the specified location with the specified color. 
  */
