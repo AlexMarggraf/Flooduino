@@ -378,9 +378,9 @@ void increaseVolume() {
 }
 
 void nextSong() {
-  digitalWrite(DFPlayerNextSongPin, LOW);
-  delay(100);
   digitalWrite(DFPlayerNextSongPin, HIGH);
+  delay(100);
+  digitalWrite(DFPlayerNextSongPin, LOW);
   delay(100);
   //digitalWrite(DFPlayerNextSongPin, HIGH);
 }
