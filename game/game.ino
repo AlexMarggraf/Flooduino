@@ -48,8 +48,6 @@ void increaseVolume(void);
 #define DFPlayerNextSongPin 4
 #define numberOfSongs 5
 
-int chosenNumberOfColor;
-
 // these are field sizes that make sense visually
 int fieldSizes[5] = { 8, 10, 13, 17, 26 };
 int fieldSizeIndex = 0;
@@ -80,7 +78,6 @@ void loop() {
   selectionModeSize();
   gameState.currentColor = 2;
   selectionModeColors();
-  chosenNumberOfColor = gameState.numberOfColors;
   nextSong();
   SetGamefield();
   gameMode();
@@ -330,7 +327,7 @@ void gameMode() {
 }
 
 void selectColorInGameUP() {
-  if (chosenNumberOfColor - 1 == gameState.currentColor) {  //TODO: Was ist die Minimale Grösse?
+  if (gameState.numberOfColors - 1 == gameState.currentColor) {  //TODO: Was ist die Minimale Grösse?
     gameState.currentColor = 0;
   } else {
     gameState.currentColor++;
@@ -339,7 +336,7 @@ void selectColorInGameUP() {
 
 void selectColorInGameDOWN() {
   if (gameState.currentColor == 0) {  //TODO: Was ist die Minimale Grösse?
-    gameState.currentColor = chosenNumberOfColor - 1;
+    gameState.currentColor = gameState.numberOfColors - 1;
   } else {
     gameState.currentColor--;
   }
