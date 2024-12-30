@@ -44,7 +44,7 @@ bool buttonHasBeenPressed(Button b) {
 void enterButtonISR() {
   long currentTime = millis();
 
-  if ((currentTime - lastEnterInterrupt) < 200) {
+  if ((currentTime - lastEnterInterrupt) < 250) {
     return;
   }
 
@@ -55,7 +55,7 @@ void enterButtonISR() {
 void upButtonISR() {
   long currentTime = millis();
 
-  if (currentTime - lastUpInterrupt < 200) {
+  if (currentTime - lastUpInterrupt < 250) {
     return;
   }
 
@@ -66,7 +66,7 @@ void upButtonISR() {
 void downButtonISR() {
   long currentTime = millis();
 
-  if (currentTime - lastDownInterrupt < 200) {
+  if (currentTime - lastDownInterrupt < 250) {
     return;
   }
 

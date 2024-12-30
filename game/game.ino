@@ -43,10 +43,11 @@ void SetInitialState(void);
 // file 5: lost screen
 void nextSong(void);
 void resetDFPlayer(void); // this method is not implemented in our design
-void increaseVolume(void);
+void decreaseVolume(void);
 #define DFPlayerBusyPin 5
 #define DFPlayerNextSongPin 4
 #define numberOfSongs 5
+#define DFPlayerDecreaseVolume 6
 
 // these are field sizes that make sense visually
 int fieldSizes[5] = { 8, 10, 13, 17, 26 };
@@ -60,10 +61,11 @@ void setup() {
   
   pinMode(DFPlayerBusyPin, INPUT_PULLUP);
   pinMode(DFPlayerNextSongPin, OUTPUT);
+  pinMode(DFPlayerDecreaseVolume, OUTPUT);
+  decreaseVolume();
   digitalWrite(DFPlayerNextSongPin, HIGH);
   delay(100);
   loopSong();
-
   setupInput();
   InitScreen();
   UpdateLayout();
@@ -369,10 +371,10 @@ void lostScreen() {
 }
 
 
-void increaseVolume() {
-  digitalWrite(DFPlayerNextSongPin, LOW);
-  delay(10000);
-  digitalWrite(DFPlayerNextSongPin, HIGH);
+void decreaseVolume() {
+  digitalWrite(DFPlayerDecreaseVolume, HIGH);
+  delay(2500);
+  digitalWrite(DFPlayerDecreaseVolume, LOW);
   delay(100);
   //digitalWrite(DFPlayerNextSongPin, HIGH);
 }
