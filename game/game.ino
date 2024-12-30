@@ -12,7 +12,7 @@
 GameState gameState = { 0 };
 
 // the seed for the random colors in the game-field
-#define SEED_SOURCE analogRead(A8)
+#define SEED_SOURCE (analogRead(A8) + analogRead(A9) + analogRead(A10) + analogRead(A11) + analogRead(A12) + analogRead(A13))
 
 // function declarations
 void SetGamefield(void);
@@ -36,17 +36,23 @@ void lostScreen(void);
 void SetInitialState(void);
 
 // DFPlayer shenanigans
+// file 1: Title screen
+// file 2: Size/number of colors seleciton
+// file 3: Game music
+// file 4: won screen
+// file 5: lost screen
 void nextSong(void);
 void resetDFPlayer(void); // this method is not implemented in our design
+void increaseVolume(void);
 #define DFPlayerBusyPin 5
 #define DFPlayerNextSongPin 4
+#define numberOfSongs 5
 
-
-int numberOfMoves;
-int fieldSizeCounter;
-int** gameBoard;
 int chosenNumberOfColor;
-int maxSize;
+
+// these are field sizes that make sense visually
+int fieldSizes[5] = { 8, 10, 13, 17, 26 };
+int fieldSizeIndex = 0;
 
 //----------------------------------------------------------------------------------
 // Main entry point
@@ -56,16 +62,18 @@ void setup() {
   
   pinMode(DFPlayerBusyPin, INPUT_PULLUP);
   pinMode(DFPlayerNextSongPin, OUTPUT);
+  digitalWrite(DFPlayerNextSongPin, HIGH);
+  delay(100);
   loopSong();
 
   setupInput();
-  SetInitialState();
   InitScreen();
   UpdateLayout();
 }
 
 void loop() {
   // main game loop
+  SetInitialState();
   titleScreen();
   gameState.numberOfColors = 3;
   nextSong();
@@ -90,7 +98,7 @@ void SetGamefield() {
 
 void SetInitialState() {
   gameState.screen = GAME;
-  gameState.fieldSize = 10;
+  gameState.fieldSize = fieldSizes[fieldSizeIndex];
   gameState.numberOfColors = 8;
   gameState.numberOfMoves = 0;
   gameState.currentColor = 1;
@@ -153,7 +161,7 @@ void floodFillIterative() {
  * This method calculates the number of moves can make, based on the number of colors and the size of the field. 
  */
 void setNumberOfMoves() {
-  gameState.numberOfMoves = (int)gameState.fieldSize * 0.2975 * gameState.numberOfColors;
+  gameState.maxNumberOfMoves = (int)gameState.fieldSize * 0.2975 * gameState.numberOfColors;
 }
 
 bool inField(int x, int y) {
@@ -174,19 +182,21 @@ bool isWithinRange(int x) {
 }
 
 void increaseFieldSize() {
-  if (gameState.fieldSize == 26) {  //TODO: Was ist die Minimale Grösse?
-    gameState.fieldSize = 8;
+  if (fieldSizeIndex == 4) {  //TODO: Was ist die Minimale Grösse?
+    fieldSizeIndex = 0;
   } else {
-    gameState.fieldSize++;
+    fieldSizeIndex++;
   }
+  gameState.fieldSize = fieldSizes[fieldSizeIndex];
 }
 
 void decreaseFieldSize() {
-  if (gameState.fieldSize == 8) {  //TODO: Was ist die Minimale Grösse?
-    gameState.fieldSize = 26;
+  if (fieldSizeIndex == 0) {  //TODO: Was ist die Minimale Grösse?
+    fieldSizeIndex = 4;
   } else {
-    gameState.fieldSize--;
-  }
+    fieldSizeIndex--;
+  }  
+  gameState.fieldSize = fieldSizes[fieldSizeIndex];
 }
 
 void increaseNumberOfColors() {
@@ -299,18 +309,20 @@ void gameMode() {
       int originalColor = gameState.field[0][0];  // Die ursprüngliche Farbe oben links
       if (originalColor != gameState.currentColor) {
         floodFillIterative();
-        if (is_won()) {
+        gameState.numberOfMoves++;
+        if (is_won() && gameState.numberOfMoves <= gameState.maxNumberOfMoves) {
           nextSong();
           wonScreen();
+          nextSong();
           return;
         }
-
-        gameState.numberOfMoves--;
-        if (gameState.numberOfMoves == 0) {
+        if (is_won() && gameState.numberOfMoves > gameState.maxNumberOfMoves) {
+          nextSong();
           nextSong();
           lostScreen();
           return;
         }
+        
       }
     }
     DrawScreen();
@@ -360,7 +372,13 @@ void lostScreen() {
 }
 
 
-
+void increaseVolume() {
+  digitalWrite(DFPlayerNextSongPin, LOW);
+  delay(10000);
+  digitalWrite(DFPlayerNextSongPin, HIGH);
+  delay(100);
+  //digitalWrite(DFPlayerNextSongPin, HIGH);
+}
 
 void nextSong() {
   digitalWrite(DFPlayerNextSongPin, LOW);
@@ -372,7 +390,7 @@ void nextSong() {
 
 void loopSong() {
   if (digitalRead(DFPlayerBusyPin) == 1) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < numberOfSongs; i++) {
       nextSong();
     }
   }

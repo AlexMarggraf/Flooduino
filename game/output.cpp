@@ -1,5 +1,5 @@
 /** 
- * this file implements the functions declared in output.h using raylib. 
+ * this file implements the functions declared in output.h for the 64 by 64 led-matrix display using the arduino. 
 */
 
 #include "RGBmatrixPanel.h"
@@ -88,7 +88,6 @@ bool GameStateUnchanged();
 // public functions
 //--------------------------------------------------------------------------------------
 void DrawScreen(void) {
-
   if (GameStateUnchanged()) {
     prevGameState = gameState;
     return;
@@ -173,7 +172,6 @@ void RenderGameLedScreen(void) {
   RenderField(true, false);
 
   RenderColorSelection(gameState.currentColor, false);
-
 
   RenderNumberOfMoves();
 }
@@ -282,11 +280,25 @@ void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlig
  */
 void RenderNumberOfMoves(void) {
   // draw the moves
-  int horizontalSpace = (64 - fieldOffset) / 2 * 2;
+  /*int horizontalSpace = (64 - fieldOffset) / 2 * 2;
   for (int i = 0; i < gameState.numberOfMoves; i++) {
     RenderDot((Point){ i * 2 % horizontalSpace + fieldOffset + 1, i / (horizontalSpace / 2) * 2 + 1 }, WHITE);
+  }*/
+  
+  char movesStringBuffer[8];
+  
+  int numOfChars = sprintf(movesStringBuffer, "%d/%d", gameState.numberOfMoves, gameState.maxNumberOfMoves);
+
+  Color noMovesColor = gameState.numberOfMoves <= gameState.maxNumberOfMoves ? matrix.Color333(7,7,7) : matrix.Color333(7,1,1);
+
+  for (int i = 0; i < numOfChars; i++) {
+    if (movesStringBuffer[i] == '/') {
+      noMovesColor = matrix.Color333(7,7,7);
+    }
+    matrix.drawChar((64 - 3 - 6*numOfChars) + i * 6, 4, movesStringBuffer[i], noMovesColor, matrix.Color333(0,0,0), 1);
   }
 }
+
 
 /**
  * Renders a filled rectangle that starts at the top left point p and extends with width w to the right and with height h down. 
