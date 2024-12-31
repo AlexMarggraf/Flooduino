@@ -316,7 +316,8 @@ void RenderNumberOfMoves(void) {
     if (movesStringBuffer[i] == '/') {
       noMovesColor = matrix.Color333(7,7,7);
     }
-    matrix.drawChar((64 - 3 - 6*numOfChars) + i * 6, 4, movesStringBuffer[i], noMovesColor, matrix.Color333(0,0,0), 1);
+    // TODO change height depending on actual margin
+    matrix.drawChar((64 - 3 - 6*numOfChars) + i * 6, 2, movesStringBuffer[i], noMovesColor, matrix.Color333(0,0,0), 1);
   }
 }
 
