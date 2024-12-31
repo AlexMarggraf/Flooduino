@@ -73,7 +73,8 @@ void ResetLedScreen(void);
 // utility render functions (for rendering layout onto the ledScreen)
 void RenderField(bool colorful, bool highlighted);
 void RenderColorSelection(int selectedColor, bool highlighted);
-void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlighted);
+void UpdateColorSelectionInGame(int prevSelectedColor, int selectedColor);
+void UpdateNumberOfColorsSelection(int prevNumberOfColors, int numberOfColors);
 void RenderNumberOfMoves(void);
 
 // display utility functions
@@ -146,10 +147,14 @@ void RenderTitleLedScreen(void) {
 }
 
 void RenderColorSelectionLedScreen(void) {
-  ResetLedScreen();
+  if (prevGameState.screen != gameState.screen) { // game was not on color selection before => reset necessary
+    ResetLedScreen();
 
-  RenderColorSelection(-1, true);
-  RenderField(false, false);
+    RenderColorSelection(-1, true);
+    RenderField(false, false);
+    return;
+  }
+  UpdateNumberOfColorsSelection(prevGameState.numberOfColors, gameState.numberOfColors);
 }
 
 void RenderSizeSelectionLedScreen(void) {
@@ -163,7 +168,7 @@ void RenderSizeSelectionLedScreen(void) {
 void RenderGameLedScreen(void) {
 
   if (onlyHighlightedColorChanged()) {
-    UpdateColorSelection(prevGameState.currentColor, gameState.currentColor, false);
+    UpdateColorSelectionInGame(prevGameState.currentColor, gameState.currentColor);
     return;
   }
 
@@ -224,6 +229,7 @@ void RenderField(bool colorful, bool highlighted) {
 /** 
  * Render color selection bar, with the in selectedColor specified color (if non-negative).
  * If selecedColor is negative, only the color selection bar is rendered, without highlight. 
+ * If highlighted is true, the whole colorselection list is highlighted. 
  */
 void RenderColorSelection(int selectedColor, bool highlighted) {
   // draw color selection bar
@@ -252,13 +258,7 @@ void RenderColorSelection(int selectedColor, bool highlighted) {
   RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
 }
 
-void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlighted) {
-  // draw color selection bar
-  if (highlighted) {
-    // TODO implement this, if this function is used in the number of colors selection
-    return;
-  }
-
+void UpdateColorSelectionInGame(int prevSelectedColor, int selectedColor) {
   if (prevSelectedColor == selectedColor) {
     return;
   }
@@ -275,6 +275,27 @@ void UpdateColorSelection(int prevSelectedColor, int selectedColor, bool highlig
   RenderRectOutline((Point){ 0, colHighlightOffset }, colSelectionBlockSize + 2, colSelectionBlockSize + 2, WHITE);
 }
 
+void UpdateNumberOfColorsSelection(int prevNumberOfColors, int numberOfColors) {
+  if (prevNumberOfColors == numberOfColors) {
+    return;
+  }
+  
+  int prevHeight = (colSelectionBlockSize + 1) * prevNumberOfColors + 1;
+  int prevOffset = 64 - prevHeight;
+
+  RenderRectFilled((Point){ 0, prevOffset }, colSelectionBlockSize + 2, prevHeight, BLACK);
+
+  for (int c = 0; c < numberOfColors; c++) {
+    int colBlockOffset = 64 - (colSelectionBlockSize + 1) * (c + 1);
+    Color currCol = colors[c];
+    RenderRectFilled((Point){ 1, colBlockOffset }, colSelectionBlockSize, colSelectionBlockSize, currCol);
+  }
+
+  int height = (colSelectionBlockSize + 1) * numberOfColors + 1;
+  int offset = 64 - height;
+  RenderRectOutline((Point){ 0, offset }, colSelectionBlockSize + 2, height, WHITE);
+}
+
 /**
  * Renders the number of moves done until now, in the upper right part of the screen as grey dots
  */
@@ -289,7 +310,7 @@ void RenderNumberOfMoves(void) {
   
   int numOfChars = sprintf(movesStringBuffer, "%d/%d", gameState.numberOfMoves, gameState.maxNumberOfMoves);
 
-  Color noMovesColor = gameState.numberOfMoves <= gameState.maxNumberOfMoves ? matrix.Color333(7,7,7) : matrix.Color333(7,1,1);
+  Color noMovesColor = gameState.numberOfMoves <= gameState.maxNumberOfMoves ? matrix.Color333(7,7,7) : matrix.Color333(7,0,0);
 
   for (int i = 0; i < numOfChars; i++) {
     if (movesStringBuffer[i] == '/') {
