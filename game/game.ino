@@ -44,6 +44,7 @@ void SetInitialState(void);
 void nextSong(void);
 void resetDFPlayer(void); // this method is not implemented in our design
 void decreaseVolume(void);
+void increaseVolume(void);
 #define DFPlayerBusyPin 5
 #define DFPlayerNextSongPin 4
 #define numberOfSongs 5
@@ -62,7 +63,8 @@ void setup() {
   pinMode(DFPlayerBusyPin, INPUT_PULLUP);
   pinMode(DFPlayerNextSongPin, OUTPUT);
   pinMode(DFPlayerDecreaseVolume, OUTPUT);
-  decreaseVolume();
+  //decreaseVolume();
+  increaseVolume();
   digitalWrite(DFPlayerNextSongPin, HIGH);
   delay(100);
   loopSong();
@@ -373,10 +375,17 @@ void lostScreen() {
 
 void decreaseVolume() {
   digitalWrite(DFPlayerDecreaseVolume, HIGH);
-  delay(2500);
+  delay(2000);
   digitalWrite(DFPlayerDecreaseVolume, LOW);
   delay(100);
   //digitalWrite(DFPlayerNextSongPin, HIGH);
+}
+
+void increaseVolume(void) {
+  digitalWrite(DFPlayerNextSongPin, HIGH);
+  delay(2000);
+  digitalWrite(DFPlayerNextSongPin, LOW);
+  delay(100);
 }
 
 void nextSong() {
