@@ -162,6 +162,14 @@ void RenderSizeSelectionLedScreen(void) {
 
   RenderColorSelection(-1, false);
   RenderField(false, true);
+  char fieldSizeStringBuffer[5];
+  
+  int numOfChars = sprintf(fieldSizeStringBuffer, "%dx%d", gameState.fieldSize, gameState.fieldSize);
+
+  for (int i = 0; i < numOfChars; i++) {
+    // TODO change height depending on actual margin
+    matrix.drawChar((64 - 3 - 6*numOfChars) + i * 6, 2, fieldSizeStringBuffer[i], matrix.Color333(7, 7, 7), matrix.Color333(0,0,0), 1);
+  }
 }
 
 
