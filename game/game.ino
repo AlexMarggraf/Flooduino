@@ -63,7 +63,6 @@ void setup() {
   pinMode(DFPlayerBusyPin, INPUT_PULLUP);
   pinMode(DFPlayerNextSongPin, OUTPUT);
   pinMode(DFPlayerDecreaseVolume, OUTPUT);
-  //decreaseVolume();
   increaseVolume();
   digitalWrite(DFPlayerNextSongPin, HIGH);
   delay(100);
