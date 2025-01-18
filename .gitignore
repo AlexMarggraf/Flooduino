@@ -1,2 +1,6 @@
-build/
-src/
+*.aux
+*.bcf
+*.log
+*.out
+*.xml
+*.gz
