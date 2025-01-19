@@ -22,8 +22,13 @@
 
 \begin{center}
 {\Huge \textbf{Flooduino}}\\
-University of Basel, Computer Architecture\\
-Pascal von Fellenberg, Istref Uka, Frederic Weyssow, Alexander Marggraf\\
+\vspace*{1cm}
+{\textbf{\LARGE University of Basel\\ \Large {Department for Mathematics and Informatics}}}\\
+\vspace*{0.5cm}
+{\Large Lecture Computer Architecture}\\
+\vspace*{0.5cm}
+Pascal von Fellenberg\\ Istref Uka\\ Frederic Weyssow\\ Alexander Marggraf\\
+\vspace*{0.5cm}
 \today
 \end{center}
 
@@ -56,7 +61,7 @@ We first created a prototype using C and raylib which is able to be run on any c
 
 It is necessary to quickly mention the prototype we had created, because it was an important step of our process, as it allowed us to implement the game logic without having connected all the necessary hardware components. It was made completely in C using the raylib graphics library for visual output and ran on our personal computers. We did this to separate the software and hardware problems as much as we could, as we weren't familiar with the hardware components we were to use. We structured our software into the following modules to make porting it to the Arduino easier: input, game logic and output. The input module's function is to detect any button presses made while the game is running. The output module implements some methods which are used to update the window in which the game is shown. To achieve this we used the raylib library. The game logic module is the entry point of the game and uses the aforementioned modules to bring the whole program together. Additionally we used global variables to share the game state between modules.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{module_structure.png}
 \caption{Structure of the modules for our project.}
@@ -67,7 +72,7 @@ It is necessary to quickly mention the prototype we had created, because it was 
 \subsection*{Porting of the Game to the Hardware}
 We were relieved to find out that the porting was relatively straightforward. The main game logic which comprised most of the code needed no further changes and we were able to just copy it over. By using the Adafruit GFX library as output and three buttons on the breadboard as input we were able to quickly confirm that our hardware was working, although it wasn't perfect yet. During this process we also decided to add some music to the game to improve the experience of playing the game, which also came with some challenges, see \nameref{sec:challenges}.
 
-\subsection*{Schematics and hardware used}
+\subsection*{Schematics and Hardware Used}
 % bild von schematics/hardware liste einfügen 
 \begin{itemize}
     \item DFPlayer mini MP3 Player Module
@@ -91,7 +96,7 @@ The buttons work using interrupts. Every time a button is pressed an interrupt i
 
 \subsection*{Visuals}
 
-\subsection*{Music}
+\subsection*{Audio}
 We decided at the beginning of the assembly of our arcade that we wanted to implement music for the game to enhance the experience for the player. We ended up deciding that every stage of the game has its own song in a loop. This was to be achieved using the DFplayer Mini which operates independently from the Arduino, playing music saved on an inserted sd card. Additionally to this we acquired a speaker for auditory output.
 
 \subsection*{Housing}
@@ -102,14 +107,14 @@ The housing was the last thing we decided on and built. Since the game and the h
 \section*{Challenges}
 \label{sec:challenges}
 
-\subsection*{Displaying bitmaps with the Adafruit library}
+\subsection*{Displaying Images}
 One challenge we faced was to figure out how to display images on the LED-matrix. This was especially difficult since there was no clear guide on how to do this. Our basic idea is to convert the image to an array of rgb values, using a Java program, and store this array on the Arduino which can then be displayed with the Adafruit library. However this process was not straight forward as the colors have to be stored as 16-bit values compared to the normal 32 and each value has to be split and stored in two sequential fields of the array. To add to this there still remains some uncertainty about the exact order every value has to have. This process required a lot of testing and experimenting but in the end we managed to get it to work. 
 
-\subsection*{Music}
+\subsection*{Audio}
 Initially we intended to use a serial connection to control the speaker but this didn't work in combination with the Adafruit GFX library. To circumvent this we communicated with the DFPlayer mini via it's IO1 and IO2 pins to change volume and skip as well as loop songs. Normally this is achieved using button presses but since the music should work independently of the input we used transistors to simulate button presses. Using this the game increases the volume at the start of the game and skips to the next song if the stage is changed. If a song is over we skip ahead until the same song is playing again to loop the song indefinitely. \\\\
 After putting all the connected hardware components into the housing, this music control didn't work correctly at times. We suspect that this was caused the wires and transistors that are involved in controlling the DFPlayer Mini being too close to the speaker, which with it's changing magnetic field caused interferences. Placing some cardboard between the speaker and the rest of the hardware fixed this issue. 
 
-\subsection*{Input}
+\subsection*{Buttons}
 A challenge we faced here where the high bounce times of the buttons. A bounce describes the period after a button has been pressed where rapid oscillations trigger multiple unwanted button presses. To deal with this we used a debounce period in which any further button presses are ignored. This was ultimately put at 250 milliseconds which is quite a long time. This leads to the truncation of any button clicks which where made in rapid succession. However, in our experience this is rarely a problem since the game does not require rapid button presses. 
 
 \section*{Division of Labor}
