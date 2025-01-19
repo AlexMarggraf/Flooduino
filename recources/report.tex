@@ -30,7 +30,7 @@ Pascal von Fellenberg, Istref Uka, Frederic Weyssow, Alexander Marggraf\\
 
 The goal of this project was to create our own implementation of the game Flood-it on an Arduino.  The outcome is a fully functioning implementation of the game encased in a cardboard housing which resembles an old arcade machine. To do this we used an Arduino Mega, a LED-matrix, a DFplayer Mini along with a speaker and three Buttons. Furthermore all of our own code is written in C and the project is compiled using the Arduino IDE. Everything is coordinated by the Arduino Mega on which the LED-matrix, a DFplayer Mini and the buttons are connected. The LED-matrix displays the current state of the game, the DFplayer Mini along with the speaker play music depending on the different stages and the three buttons allow the player to interact with the device. At the end of our project, everything worked as intended although not always on the first attempt. 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{Finished_Product.jpg}
     \caption{hallo}
@@ -38,9 +38,7 @@ The goal of this project was to create our own implementation of the game Flood-
 \end{figure}
 \section*{Introduction}
 
-The goal of the game Flood-it is to fill a grid of differently colored cells with the same color in the maximal number of allowed moves. To start with the player can choose the size of the grid and how many colors should appear on the grid. Then each move the player can choose the color of the top left cell which is then propagated down the grid using a flood fill algorithm at the end of each move. If the player manages to use no more than some predetermined number of moves he wins, however if he uses more moves he loses.\\\\
-
-\pagebreak
+The goal of the game Flood-it is to fill a grid of differently colored cells with the same color in the maximal number of allowed moves. To start with the player can choose the size of the grid and how many colors should appear on the grid. Then each move the player can choose the color of the top left cell which is then propagated down the grid using a flood fill algorithm at the end of each move. If the player manages to use no more than some predetermined number of moves he wins, however if he uses more moves he loses.
 
 \section*{Methodology}
 
