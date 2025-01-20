@@ -10,16 +10,16 @@
 \usepackage{microtype}
 \usepackage{enumitem}
 \usepackage{wrapfig}
+\usepackage{multicol}
 
 \let\olditemize\itemize
 \renewcommand{\itemize}{\olditemize[itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt]}
 \let\oldenumerate\enumerate
 \renewcommand{\enumerate}{\oldenumerate[itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=9pt, labelwidth=0pt, labelsep=.5em]}
 
-\addbibresource{references.bib}
-
 \begin{document}
 
+\begin{titlepage}
 \begin{center}
 {\Huge \textbf{Flooduino}}\\
 \vspace*{1cm}
@@ -31,21 +31,17 @@ Pascal von Fellenberg\\ Istref Uka\\ Frederic Weyssow\\ Alexander Marggraf\\
 \vspace*{0.5cm}
 \today
 \end{center}
+\end{titlepage}
+
 
 \section*{Abstract}
 
-The goal of this project was to create our own implementation of the game Flood-it on an Arduino.  The outcome is a fully functioning implementation of the game encased in a cardboard housing which resembles an old arcade machine. To do this we used an Arduino Mega, a LED-matrix, a DFplayer Mini along with a speaker and three Buttons. Furthermore all of our own code is written in C and the project is compiled using the Arduino IDE. Everything is coordinated by the Arduino Mega on which the LED-matrix, a DFplayer Mini and the buttons are connected. The LED-matrix displays the current state of the game, the DFplayer Mini along with the speaker play music depending on the different stages and the three buttons allow the player to interact with the device. At the end of our project, everything worked as intended although not always on the first attempt. 
-
-\section*{Introduction}
-
-The goal of the game Flood-it is to fill a grid of differently colored cells with the same color in the maximal number of allowed moves. To start with the player can choose the size of the grid and how many colors should appear on the grid. Then each move the player can choose the color of the top left cell which is then propagated down the grid using a flood fill algorithm at the end of each move. If the player manages to use no more than some predetermined number of moves he wins, however if he uses more moves he loses.\\\\
-To do this we used The Arduino Mega which was beneficial for us because of its increased memory capacity and its many connection pins. In addition we used a 64x64 LED-matrix from Waveshare as visual output, a DFplayer Mini to control the music, a Speaker for auditory output and three buttons as input. The LED-matrix always displays whatever stage the game is in at the current moment. These being the start screen, selection screen, the game and a win/loss screen. The DFplayer Mini functions similarly as it plays different music depending on the different stages of the game. The buttons consist of the arrow keys up and down as well as an enter key. The arrow keys are used to increase or decrease the field size and the amount of colors used in the selection screen and as a way to select the color in the game itself. The enter key is used every where else meaning to switch to the next stage and to initiate the flood fill algorithm.\\\\
-We first created a prototype using C and raylib which is able to be run on any computer. Then we migrated this code over to the Arduino where changes were made wherever necessary. This includes using an Adafruit library instead of raylib for the visual output. Implementing controls for the DFplayer Mini as well as detecting the button presses. Next everything was build together using two breadboards, one for the buttons and one for the DFplayer Mini. Necessary connections between the devices where made using wires and transistors. Finally a cardboard housing was build which is made out of cardboard boxes that we bought in a hardware store. The shape was cut out and glued together using hot glue such that it resembles an old arcade.
+The goal of this project was to create our own implementation of the game Flood-it on an Arduino.  The outcome is a fully functioning implementation of the game encased in a cardboard housing which resembles an old arcade machine. To do this we used an Arduino Mega, a LED-matrix, a DFplayer Mini along with a speaker and three Buttons. Furthermore all of our own code is written in C and the project is compiled using the Arduino IDE. Everything is coordinated by the Arduino Mega on which the LED-matrix, a DFplayer Mini and the buttons are connected. The LED-matrix displays the current state of the game, the DFplayer Mini along with the speaker play music depending on the different stages and the three buttons allow the player to interact with the device. At the end of our project, everything worked as intended although not always on the first attempt.
 \begin{figure}[h]
     \centering
     \begin{minipage}{0.48\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{Finished_Product.jpg}
+    \includegraphics[width=\linewidth]{Finished_Product.png}
     \caption{The finished product.}
     \end{minipage}
     \hfill
@@ -54,6 +50,13 @@ We first created a prototype using C and raylib which is able to be run on any c
     \caption{The top part of the housing.}
     \end{minipage}
 \end{figure}
+
+
+\section*{Introduction}
+
+The goal of the game Flood-it is to fill a grid of differently colored cells with the same color in the maximal number of allowed moves. To start with the player can choose the size of the grid and how many colors should appear on the grid. Then each move the player can choose the color of the top left cell which is then propagated down the grid using a flood fill algorithm at the end of each move. If the player manages to use no more than some predetermined number of moves he wins, however if he uses more moves he loses.\\\\
+To do this we used The Arduino Mega which was beneficial for us because of its increased memory capacity and its many connection pins. In addition we used a 64x64 LED-matrix from Waveshare as visual output, a DFplayer Mini to control the music, a Speaker for auditory output and three buttons as input. The LED-matrix always displays whatever stage the game is in at the current moment. These being the start screen, selection screen, the game and a win/loss screen. The DFplayer Mini functions similarly as it plays different music depending on the different stages of the game. The buttons consist of the arrow keys up and down as well as an enter key. The arrow keys are used to increase or decrease the field size and the amount of colors used in the selection screen and as a way to select the color in the game itself. The enter key is used every where else meaning to switch to the next stage and to initiate the flood fill algorithm.\\\\
+We first created a prototype using C and raylib which is able to be run on any computer. Then we migrated this code over to the Arduino where changes were made wherever necessary. This includes using an Adafruit library instead of raylib for the visual output. Implementing controls for the DFplayer Mini as well as detecting the button presses. Next everything was build together using two breadboards, one for the buttons and one for the DFplayer Mini. Necessary connections between the devices where made using wires and transistors. Finally a cardboard housing was build which is made out of cardboard boxes that we bought in a hardware store. The shape was cut out and glued together using hot glue such that it resembles an old arcade.
 
 \section*{Methodology}
 
@@ -74,6 +77,7 @@ We were relieved to find out that the porting was relatively straightforward. Th
 
 \subsection*{Schematics and Hardware Used}
 % bild von schematics/hardware liste einfügen 
+\begin{multicols}{2}
 \begin{itemize}
     \item DFPlayer mini MP3 Player Module
     \item Speaker 4Ohm 3W 50mm
@@ -90,11 +94,10 @@ We were relieved to find out that the porting was relatively straightforward. Th
     \item 10 Ohm resistor
     \item some cardboard boxes and hot glue
 \end{itemize}
+\end{multicols}
 
 \subsection*{Input}
 The buttons work using interrupts. Every time a button is pressed an interrupt is triggered which increases an internal variable which tracks how often a button has been pressed. This allows us to register any button presses regardless of what the processor is doing. The game loop will check for each counter if it is bigger than zero and perform actions accordingly. Each time the state of such a counter is queried, it is decremented.
-
-\subsection*{Visuals}
 
 \subsection*{Audio}
 We decided at the beginning of the assembly of our arcade that we wanted to implement music for the game to enhance the experience for the player. We ended up deciding that every stage of the game has its own song in a loop. This was to be achieved using the DFplayer Mini which operates independently from the Arduino, playing music saved on an inserted sd card. Additionally to this we acquired a speaker for auditory output.
@@ -118,10 +121,10 @@ After putting all the connected hardware components into the housing, this music
 A challenge we faced here where the high bounce times of the buttons. A bounce describes the period after a button has been pressed where rapid oscillations trigger multiple unwanted button presses. To deal with this we used a debounce period in which any further button presses are ignored. This was ultimately put at 250 milliseconds which is quite a long time. This leads to the truncation of any button clicks which where made in rapid succession. However, in our experience this is rarely a problem since the game does not require rapid button presses. 
 
 \section*{Division of Labor}
-During the project the areas that where worked on by only certain members of the group are listed below:\\\\
+During the project the areas that where worked on by only certain members of the group are listed below:\\
 Alex: Input, visual design and displaying images.\\
 Pascal: Visual output and porting.\\
-Frederic and Istref: Game logic and audio.\\\\
+Frederic and Istref: Game logic and audio.\\
 Furthermore there where many challenges we worked on together as a team, these include choosing the parts, building the housing, implementing and debugging the speaker, testing and choosing the music.
 
 \section*{Conclusion}
